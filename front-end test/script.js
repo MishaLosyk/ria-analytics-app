@@ -4,15 +4,42 @@ let headRow = document.getElementById('headRow');
 let tableBody = document.getElementById('tableBody');
 let sub = document.getElementById('sub');
 
-let data = {
-    table:  ["slon_facts"],
-    select: ["user_id", "EventDate", ["marka_id"]],
-    where:  ["user_id < 1000"],
-    group:  [null],
-    sort:   [undefined]
-}
+let data = 
+    [
+        {
+            haveSubRequest: false,
+            from: 'someTable',
+            select: [],
+            where:  [],
+            group:  [],
+            sort:   [],
+            date:   []       
+        },
+        'UNION',
+        {           
+            haveSubRequest: true,
+            from:   {
+                        haveSubRequest: false,
+                        from: 'someTable',
+                        select: [],
+                        where:  [],
+                        group:  [],
+                        sort:   [],
+                        fromDate: [],
+                        date: []
+                    },
+            select: [],
+            where:  [],
+            group:  [],
+            sort:   [],
+            date: []
+      
+        }   
+        
+    ]
 
 
+console.log(data);
 
 
 sub.addEventListener('click', async (e)=>{
@@ -25,8 +52,8 @@ sub.addEventListener('click', async (e)=>{
         body: JSON.stringify(data)
 
     });
-    let res = await req.json();
-    console.log(res);
+    // let res = await req.json();
+    // console.log(res);
 
 });
 
