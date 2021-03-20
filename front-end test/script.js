@@ -4,40 +4,113 @@ let headRow = document.getElementById('headRow');
 let tableBody = document.getElementById('tableBody');
 let sub = document.getElementById('sub');
 
-let data = 
-    [
-        {
-            haveSubRequest: false,
-            from: 'someTable',
-            select: [],
-            where:  [],
-            group:  [],
-            sort:   [],
-            date:   []       
-        },
-        'UNION',
-        {           
-            haveSubRequest: true,
-            from:   {
-                        haveSubRequest: false,
-                        from: 'someTable',
-                        select: [],
-                        where:  [],
-                        group:  [],
-                        sort:   [],
-                        fromDate: [],
-                        date: []
+const data2 = [
+    {
+        haveSubRequest: false,
+        from: 'slon_facts',
+        select: [   
+                    {
+                        name: 'user_id',
+                        type: 'unInt',
+                        value: 'user_id'
                     },
-            select: [],
-            where:  [],
-            group:  [],
-            sort:   [],
-            date: []
-      
-        }   
-        
-    ]
+                    {
+                        name: 'marka_id',
+                        type: 'Array(int)',
+                        value: 'marka_id'
+                    }
+                ],
+        where:  [],
+        group:  [],
+        sort:   ['EventDate'],
+        date:   ["EventDate < '2021-03-22' AND EventDate > '2020-02-01'"]       
+    }
+]
 
+
+
+
+const data = [
+    {
+        haveSubRequest: false,
+        from: 'slon_facts',
+        select: [   
+                    {
+                        name: 'user_id',
+                        type: 'unInt',
+                        value: 'count(user_id)'
+                    },
+                    {
+                        name: 'marka_id',
+                        type: 'Array(int)',
+                        value: 'marka_id'
+                    }
+                ],
+        where:  [],
+        group:  ['HourDate'],
+        sort:   ['EventDate'],
+        date:   ["EventDate < '2021-03-22' AND EventDate > '2020-02-01'"]       
+    },
+    'UNION ALL',
+    {           
+        haveSubRequest: true,
+        from:   {
+                    haveSubRequest: true,
+                    from:   {
+                                haveSubRequest: false,
+                                from: 'slon_facts',
+                                select: [   
+                                            {
+                                                name: 'user_id',
+                                                type: 'unInt',
+                                                value: 'count(user_id)'
+                                            },
+                                            {
+                                                name: 'marka_id',
+                                                type: 'Array(int)',
+                                                value: 'marka_id'
+                                            }
+                                        ],
+                                where:  ['user_id > 3000'],
+                                group:  [],
+                                sort:   [],
+                                date:   ["EventDate < '2021-03-22' AND EventDate > '2020-02-01'"]
+                            },
+                    select: [   
+                                {
+                                    name: 'user_id',
+                                    type: 'unInt',
+                                    value: 'count(user_id)'
+                                },
+                                {
+                                    name: 'marka_id',
+                                    type: 'Array(int)',
+                                    value: 'marka_id'
+                                }
+                            ],
+                    where:  ['user_id > 3000'],
+                    group:  [],
+                    sort:   [],
+                    date:   ["EventDate < '2021-03-22' AND EventDate > '2020-02-01'"]
+                },
+        select: [   
+                    {
+                        name: 'user_id',
+                        type: 'unInt',
+                        value: 'count(user_id)'
+                    },
+                    {
+                        name: 'marka_id',
+                        type: 'Array(int)',
+                        value: 'marka_id'
+                    }
+                ],
+        where:  ['user_id > 3000'],
+        group:  [],
+        sort:   [],
+        date:   ["EventDate < '2021-03-22' AND EventDate > '2020-02-01'"]  
+    }   
+];
 
 console.log(data);
 
@@ -49,11 +122,11 @@ sub.addEventListener('click', async (e)=>{
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data2)
 
     });
-    // let res = await req.json();
-    // console.log(res);
+    let res = await req.json();
+    console.log(res);
 
 });
 
