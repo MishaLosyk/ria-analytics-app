@@ -1,7 +1,8 @@
 <template>
 <div>
 	<div v-if="recieved == null"><div id="result">No match</div></div>
-	<div v-if="recieved != null">
+		<div v-if="recieved == 'error'"><div id="result">No data matching this request</div></div>
+	<div v-if="recieved != null && recieved != 'error'">
 	<div id="result">Result:<b>{{recieved.data.length +' items'}}</b></div>
 	<div id ='table'>
 		<hr>

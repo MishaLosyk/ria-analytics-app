@@ -3,7 +3,8 @@
 			<button class="remove" id="removeButton" @click.prevent="show = false"></button>
 			<select v-model="selectedItem" id="selectList">
 	<option value="null" selected disabled hidden>Select field</option>
-  	<option v-bind:key="recieved" v-for="name in fieldname[fieldIndex][1]" :value="name.name">{{name.name}}</option>
+    <option v-for="name in tempnames" :value="name">{{name}}</option>
+  	<!-- <option v-bind:key="recieved" v-for="name in fieldname[fieldIndex][1]" :value="name.name">{{name.name}}</option> -->
 			</select>
 			</div>
 </template>
@@ -11,7 +12,7 @@
 <script>
 export default {
     name:'SortBy',
-    props:["fieldname",'request',"fieldIndex", "recieved"],
+    props:["fieldname",'request',"fieldIndex", "recieved",'tempnames'],
         data(){
         return{
             selectedItem: 'null',

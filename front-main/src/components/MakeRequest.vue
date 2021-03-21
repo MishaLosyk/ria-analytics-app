@@ -11,15 +11,15 @@
 	</select>
 </div>
 	<div class="container">
-	<DatasForView v-bind:fieldIndex="fieldIndex" v-for="n of countDataField" v-bind:fieldname="fieldname" v-bind:request="request"></DatasForView>
-	<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addDataField">+ Add new field</button>
+	<DatasForView @onChange="onChangeField" v-bind:fieldIndex="fieldIndex" v-for="n of countDataField" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"></DatasForView>
+	<button id ="newFieldButton" :disabled="fieldIndex == 'null' " @click.prevent="addDataField">+ Add new field</button>
 	<hr id="blockHr">
 </div>
 
 
 <div class="container">
 	<div style="margin-left: 36px">Where</div>
-	<Where v-bind:fieldIndex="fieldIndex" v-for="n in countWhere" v-bind:fieldname="fieldname" v-bind:request="request" />
+	<Where v-bind:fieldIndex="fieldIndex" v-for="n in countWhere" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"/>
 	<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addWhere">+ Add new field</button>
 	<hr id="blockHr">
 </div>
@@ -27,13 +27,13 @@
 	<div>
 		<div class="Rcontainer">
 		<div style="margin-left: 36px">Sort by</div>
-			<SortBy v-bind:fieldIndex="fieldIndex" v-for="n in countSortBy" v-bind:fieldname="fieldname" v-bind:request="request" />
+			<SortBy v-bind:fieldIndex="fieldIndex" v-for="n in countSortBy" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"/>
 			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addSortBy">+ Add new field</button>
 		</div>
 	</div>
 	<div class="Lcontainer">
 		<div style="margin-left: 36px">Group by</div>
-			<GroupBy v-bind:fieldIndex="fieldIndex" v-for="n in countGroupBy" v-bind:fieldname="fieldname" v-bind:request="request" />
+			<GroupBy v-bind:fieldIndex="fieldIndex" v-for="n in countGroupBy" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"/>
 			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addGroupBy">+ Add new field</button>
 		</div>
 </div>
@@ -62,7 +62,7 @@ import GroupBy from "@/components/GroupBy";
 export default {
   name: "MakeRequest",
   components: {DatasForView,Where, SortBy,GroupBy},
-  props:["recieved","request","fieldname",'result','temprequest','tempfield'],
+  props:["recieved","request","fieldname",'result','temprequest','tempfield','tempnames'],
   data() { 
 	return{		
 countDataField:[],
@@ -72,9 +72,15 @@ countGroupBy:[],
 fromDate:'',
 toDate:'',
 fieldIndex:'null',
+nameForChild:null,
 }
   },
 methods:{
+	onChangeField(){
+		this.$bus.$emit('FieldChange', 'hi')
+		this.nameForChild = this.tempnames
+		console.log(this.nameForChild)
+	},
 	submit(e) {
 		this.submitform()
 		console.log("submit")
@@ -130,17 +136,7 @@ from(){
         }
 		this.temprequest.haveSubRequest = true
 		this.requestclear()
-	// 	this.request={
-    //   haveSubRequest: false,
-    //   from: '',
-    //   select: [],
-    //   where:  [],
-    //   group:  [],
-    //   sort:   [],
-    //   date:   []       
-	// 	}
 		console.log(this.request)
-		console.log('if')
 	}	
 	else{
 		this.addNewBranch(this.temprequest)
@@ -153,7 +149,6 @@ from(){
       sort:   [],
       date:   []       
 		}
-		console.log('else')
 	}
 this.restore()
 },
@@ -178,7 +173,6 @@ addNewBranch(obj){
 var that = this
 	console.log(obj.haveSubRequest)
 	if(obj.haveSubRequest){
-		console.log('икфтсрwork')
 		that.addNewBranch(obj.from)
 	}
 	else{
@@ -372,11 +366,13 @@ var that = this
 	background-color: #2f90d1
 }
 .submitButton:disabled{
-	background-color: rgba(33, 155, 231, .6)
+	background-color: rgba(33, 155, 231, .6);
+	color: rgba(255, 255, 255, .5);
 }
 
 .submitButton:disabled:hover{
 	background-color: rgba(33, 155, 231, .6);
+	color: rgba(255, 255, 255, .5);
 	cursor: default;
 }
 

@@ -36,7 +36,6 @@ function queryConstructor (obj) {
     obj.where.length > 0 ? where = ' WHERE ' + obj.where.join(' AND ') + ' AND ' + obj.date : where = ' WHERE ' + obj.date;
     if (obj.group.length > 0) group = ' GROUP BY ' + obj.group.join(', ');
     if (obj.sort.length > 0) sort = ' ORDER BY ' + obj.sort.join(', ');
-    
     return 'SELECT ' + select + ' FROM ' + from + arrayJoin + where + group + sort + ' limit 100';
 }
 

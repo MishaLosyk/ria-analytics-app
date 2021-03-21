@@ -1,14 +1,14 @@
 <template>
     <div v-show="show" >
-	<button class="remove" id="removeButton" @click.prevent="show = false"></button>
-	<select v-model="selectedItem" id="selectList">
+	<button class="remove" id="removeButton" @click.prevent="clickedRemove"></button>
+	<select v-model="selectedItem" id="selectList" @change="onChange">
 	<option value="null" selected disabled hidden>Select field</option>
   	<option v-bind:key="recieved" v-for="name in fieldname[fieldIndex][1]" :value="name">{{name.name}}</option>
 	</select>
     <select v-model="func" id="selectList">
     <option value="null">Select function</option>
     <option value="cnt">Count</option>   
-  	<option value="avg=">Average</option>
+  	<option value="avg">Average</option>
  	<option value="max">Maximum</option>
     <option value="min">Minimum</option>
 	</select>
@@ -18,12 +18,14 @@
 <script>
 export default { 
     name:"DatasForView",
-    props:["fieldname",'request',"fieldIndex", "recieved"],
+    props:["fieldname",'request',"fieldIndex", "recieved",'tempnames'],
     data(){
         return{
             selectedItem: 'null',
             func:'null',
             show: true,
+            wasSelected:false,
+            oldSelect:null
         }
     },
 
@@ -58,6 +60,25 @@ export default {
             restore(){
             this.show = false
             this.selectedItem = this.inputField = 'null';
+        },
+        onChange(){
+            this.$emit('onChange')
+            if(!this.wasSelected){
+            this.tempnames.push(this.selectedItem.name)
+            this.wasSelected = true
+            this.oldSelect = this.selectedItem.name
+            }
+            else{
+                let index = this.tempnames.indexOf(this.oldSelect)
+                this.tempnames.splice(index, 1)
+                this.tempnames.push(this.selectedItem.name)
+                this.oldSelect = this.selectedItem
+            }
+        },
+        clickedRemove(){
+            this.show = false
+            let index = this.tempnames.indexOf(this.oldSelect)
+            this.tempnames.splice(index, 1)
         }
     },
 }
