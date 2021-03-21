@@ -13,6 +13,7 @@ const
 
 function queryConstructor (obj) {
 
+    console.log(obj);
     let select = '',
         from = '',
         where = '',
@@ -64,6 +65,7 @@ module.exports = {
      * @return {Array}  [ [table, [titles]], [table2, [titles]] ]
      */
     getSearchParams: async function getSearchParamsFromDb() {
+        console.log('there is query');
         const showTables = await ch.querying('show tables', {format: 'JSONCompact'});
         let tables = showTables.data;
         let tablesWithHeads = [];
@@ -81,8 +83,9 @@ module.exports = {
      * @returns {Array} { meta: [], data: [] };
      */
     getSearchResults: async function getSearchResultsFromDb(body) {
-
+            console.log('there is post.. ', body);
             let query = queryUnion(body); 
+            console.log('QUERY is.. ', query);
             const searchRequest = await ch.querying(query, {format: 'JSONCompact'});
             return searchRequest;
         
