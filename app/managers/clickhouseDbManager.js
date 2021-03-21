@@ -13,7 +13,6 @@ const
 
 function queryConstructor (obj) {
 
-    console.log(obj);
     let select = '',
         from = '',
         where = '',
@@ -34,7 +33,7 @@ function queryConstructor (obj) {
         from = obj.from 
     }
     /// create other micro queries like 'WHERE user_id < 123'
-    obj.where.length > 0 ? where = ' WHERE ' + obj.where.join(', ') + ' AND ' + obj.date : where = ' WHERE ' + obj.date;
+    obj.where.length > 0 ? where = ' WHERE ' + obj.where.join(' AND ') + ' AND ' + obj.date : where = ' WHERE ' + obj.date;
     if (obj.group.length > 0) group = ' GROUP BY ' + obj.group.join(', ');
     if (obj.sort.length > 0) sort = ' ORDER BY ' + obj.sort.join(', ');
     
@@ -65,7 +64,6 @@ module.exports = {
      * @return {Array}  [ [table, [titles]], [table2, [titles]] ]
      */
     getSearchParams: async function getSearchParamsFromDb() {
-        console.log('there is query');
         const showTables = await ch.querying('show tables', {format: 'JSONCompact'});
         let tables = showTables.data;
         let tablesWithHeads = [];
@@ -83,11 +81,17 @@ module.exports = {
      * @returns {Array} { meta: [], data: [] };
      */
     getSearchResults: async function getSearchResultsFromDb(body) {
-            console.log('there is post.. ', body);
+        try {    
             let query = queryUnion(body); 
-            console.log('QUERY is.. ', query);
-            const searchRequest = await ch.querying(query, {format: 'JSONCompact'});
-            return searchRequest;
+                console.log(query);
+                const searchRequest = await ch.querying(query, {format: 'JSONCompact'});
+                console.log(searchRequest);
+                return searchRequest;
+        }
+            catch(err) {
+                console.log('error is here.. ', err);
+                return {error: 'No data matching this request'};
+            }
         
     }
 

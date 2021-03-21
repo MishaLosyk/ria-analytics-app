@@ -21,10 +21,9 @@ export default {
     props:["fieldname",'request',"fieldIndex", "recieved"],
     data(){
         return{
-            selectedItem: null,
-            func:null,
+            selectedItem: 'null',
+            func:'null',
             show: true,
-            func: null,
         }
     },
 
@@ -58,7 +57,7 @@ export default {
         },
             restore(){
             this.show = false
-            this.selectedItem = this.inputField = null;
+            this.selectedItem = this.inputField = 'null';
         }
     },
 }

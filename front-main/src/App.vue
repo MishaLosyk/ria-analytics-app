@@ -46,15 +46,7 @@ startfieldnames:null,
 tempfield:[[]],
 fieldname:null,
 result:[],
-recieved:{
-  'meta':[],
-  'data':[],
-  'rows': null,
-  'rows_before_limit_at_least': null,
-  'statistics': null,
-  'transferred': null,
-
-}
+recieved: null
   }
     },
 methods:{
@@ -143,8 +135,8 @@ onUnionAll(){
   const article = this.result;
   const response = await axios.post("http://localhost:8081/search", article);  //замени localhost/api
     this.result = []
-    this.recieved = response;
-    console.log(this.recieved)
+    this.recieved = response.data;
+    console.log('recieved is......', this.recieved)
     this.temprequest={
       haveSubRequest: false,
       from: '',

@@ -14,7 +14,7 @@ export default {
     props:["fieldname",'request',"fieldIndex", "recieved"],
         data(){
         return{
-            selectedItem: null,
+            selectedItem: 'null',
             show: true
         }
     },
@@ -28,12 +28,12 @@ export default {
 },
     methods:{
         submit(){
-            if(this.selectedItem != '' && this.show){
+            if(this.selectedItem != 'null' && this.show){
                 this.request.sort.push(this.selectedItem)
                 }
         },
         restore(){
-            this.selectedItem = null;
+            this.selectedItem = 'null';
             this.show = false
         }       
 

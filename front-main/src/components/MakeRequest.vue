@@ -12,7 +12,7 @@
 </div>
 	<div class="container">
 	<DatasForView v-bind:fieldIndex="fieldIndex" v-for="n of countDataField" v-bind:fieldname="fieldname" v-bind:request="request"></DatasForView>
-	<button id ="newFieldButton" :disabled="fieldIndex == null" @click.prevent="addDataField">+ Add new field</button>
+	<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addDataField">+ Add new field</button>
 	<hr id="blockHr">
 </div>
 
@@ -20,7 +20,7 @@
 <div class="container">
 	<div style="margin-left: 36px">Where</div>
 	<Where v-bind:fieldIndex="fieldIndex" v-for="n in countWhere" v-bind:fieldname="fieldname" v-bind:request="request" />
-	<button id ="newFieldButton" :disabled="fieldIndex == null" @click.prevent="addWhere">+ Add new field</button>
+	<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addWhere">+ Add new field</button>
 	<hr id="blockHr">
 </div>
 <div class="containerSplit">
@@ -28,13 +28,13 @@
 		<div class="Rcontainer">
 		<div style="margin-left: 36px">Sort by</div>
 			<SortBy v-bind:fieldIndex="fieldIndex" v-for="n in countSortBy" v-bind:fieldname="fieldname" v-bind:request="request" />
-			<button id ="newFieldButton" :disabled="fieldIndex == null" @click.prevent="addSortBy">+ Add new field</button>
+			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addSortBy">+ Add new field</button>
 		</div>
 	</div>
 	<div class="Lcontainer">
 		<div style="margin-left: 36px">Group by</div>
 			<GroupBy v-bind:fieldIndex="fieldIndex" v-for="n in countGroupBy" v-bind:fieldname="fieldname" v-bind:request="request" />
-			<button id ="newFieldButton" :disabled="fieldIndex == null" @click.prevent="addGroupBy">+ Add new field</button>
+			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addGroupBy">+ Add new field</button>
 		</div>
 </div>
 <div class="container" >
@@ -43,11 +43,11 @@
 	<input type="date" id="inputDate" v-model="fromDate"> - <input type="date" id="inputDate1" v-model="toDate">
 </div>
 <div>
-<button @click.prevent="submit" :disabled="fieldIndex == null || fromDate == ''|| toDate == ''" class="submitButton" >Show result</button>
+<button @click.prevent="submit" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''" class="submitButton" >Show result</button>
 <button @click.prevent="restore"  class="resetButton"  name="reset" >Restore all</button>
-<button @click.prevent="union" :disabled="fieldIndex == null || fromDate == ''|| toDate == ''"   class="submitButton" >Union</button>
-<button @click.prevent="unionall" :disabled="fieldIndex == null || fromDate == ''|| toDate == ''"   class="submitButton" >Union All</button>
-<button @click.prevent="from" :disabled="fieldIndex == null"  class="submitButton" >From</button>
+<button @click.prevent="union" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''"   class="submitButton" >Union</button>
+<button @click.prevent="unionall" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''"   class="submitButton" >Union All</button>
+<button @click.prevent="from" :disabled="fieldIndex == 'null'"  class="submitButton" >From</button>
 </div>
     </form>
   </div>
@@ -71,7 +71,7 @@ countSortBy:[],
 countGroupBy:[],
 fromDate:'',
 toDate:'',
-fieldIndex:null,
+fieldIndex:'null',
 }
   },
 methods:{
@@ -235,7 +235,7 @@ var that = this
 	restore(){
 		this.fromDate = this.toDate = ''
 		this.$bus.$emit('throwrestore', 'Hi')
-		this.fieldIndex = null
+		this.fieldIndex = 'null'
 		this.countDataField = []
 	}
 

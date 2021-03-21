@@ -2,11 +2,11 @@
  	<div v-if="show">
 	<button class="remove" id="removeButton" @click.prevent="show = false"></button>
 	<select v-model="selectedItem" id="selectList">
-	<option value="" selected disabled hidden>Select field</option>
+	<option value="null" selected disabled hidden>Select field</option>
   	<option v-bind:key="recieved" v-for="name in fieldname[fieldIndex][1]" :value="name.name">{{name.name}}</option>
 	</select>
 	<select v-model="condition" id="selectListCondition">
-	<option value="null" selected disabled hidden>Select condition</option>
+	<option value="" selected disabled hidden>Select condition</option>
     <option value="=">Equal</option>   
   	<option value="!=">Not</option>
  	<option value=">">More</option>
@@ -22,9 +22,9 @@ export default {
     props:["fieldname",'request','fieldIndex', 'recieved'],
     data(){
         return{
-            selectedItem: '',
-            inputField: null,
-            condition: null,
+            selectedItem: 'null',
+            inputField: '',
+            condition: '',
             show: true
         }
     },
@@ -38,12 +38,13 @@ export default {
 },
     methods:{
         submit(){
-            if(this.show && this.selectedItem != '' && this.condition != '' && this.inputField != ''){
+            if(this.show && this.selectedItem != 'null' && this.condition != '' && this.inputField != ''){
                 this.request.where.push(this.selectedItem + this.condition + this.inputField)
                 }
         },
         restore(){
-        this.selectedItem = this.condition = this.inputField = '';
+        this.selectedItem = 'null';
+		this.condition = this.inputField = ''
 		this.show = false
         }
     },
