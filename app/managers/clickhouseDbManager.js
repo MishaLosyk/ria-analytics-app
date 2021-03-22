@@ -1,7 +1,9 @@
 const
     config = require('config'),
     ClickHouse = require('@apla/clickhouse'),
-    ch = new ClickHouse(config.clickhouse)
+    ch = new ClickHouse(config.clickhouse),
+    fs = require('fs'),
+    {TABLE_FILE_LIST, CREATE_DB_QUERY_LIST} = require('../../data/tablets')
 ;
 
 
@@ -92,6 +94,52 @@ module.exports = {
                 return {error: 'No data matching this request'};
             }
         
-    }
+    },
+
+     /**
+     * 
+     * @param {*} table name of creating table
+     * @param {*} fileName name of the file for importing data in CSV format
+     * @returns {Promise} return true if data is imported and false otherwise
+     */
+      importDbCsv: async function importDbFromCSVfile(table,fileName){
+        let result = "The tables are imported";
+        for(let  i=0; i< TABLE_FILE_LIST.length; i++) {
+           const query = `INSERT INTO ${TABLE_FILE_LIST[i][0]} FORMAT CSVWithNames`;
+           try {
+               const csvStream = fs.createReadStream(`data/${TABLE_FILE_LIST[i][1]}`)
+               const clickhouseStream = ch.query(query)
+               csvStream.pipe(clickhouseStream)
+               .on("finish", (ev)=> console.log(`The data from ${TABLE_FILE_LIST[i][1]} is imported to ${TABLE_FILE_LIST[i][0]}`))
+               csvStream.on("error", (error)=>{
+                   console.log("Error in reading data from file:", TABLE_FILE_LIST[i][1]); 
+                   clickhouseStream.end();
+                   result = `Error in reading data from file: ${TABLE_FILE_LIST[i][1]}`;
+                   return `Error in reading data from file: ${TABLE_FILE_LIST[i][1]}`;
+               })    
+       
+           } catch (error) {
+               result = "The next error is happened during importing the file to DB" + error;
+               console.log("The next error is happened during importing the file to DB", error);
+               return "There is an error during importing.";
+           }
+        }
+       
+       return result;
+   },
+
+   createNewTable: async function createTable() {
+
+       for (let i =0; i< CREATE_DB_QUERY_LIST.length; i++) {
+           try {
+               await ch.querying(CREATE_DB_QUERY_LIST[i], {format: 'JSONCompact'});
+           } catch (error) {
+               return `An error happened during creating Db #${i+1}`
+           }
+       }
+       return "The all tables are created"
+       
+       
+   }
 
 }

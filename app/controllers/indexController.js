@@ -14,12 +14,24 @@ async function mainPage (ctx, next) {
  */
 async function search (ctx, next) {
     let response = await myDb.getSearchResults(ctx.request.body);
-    console.log(response);
     ctx.body = response;
     ctx.status = 201;
     await next();
 
 }
 
+async function importDb (ctx, next) {
+    const response = await myDb.importDbCsv();
+    ctx.body = response;
+    await next();
+}
 
-module.exports = { mainPage, search };
+async function createDb (ctx, next) {
+    const response = await myDb.createNewTable();
+    ctx.body = response;
+    await next();
+}
+
+
+
+module.exports = { mainPage, search, importDb, createDb };
