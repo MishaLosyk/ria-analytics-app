@@ -7,7 +7,7 @@
 	</select>
     <select v-model="func" id="selectList">
     <option value="null">Select function</option>
-    <option value="cnt">Count</option>   
+    <option value="count">Count</option>   
   	<option value="avg">Average</option>
  	<option value="max">Maximum</option>
     <option value="min">Minimum</option>

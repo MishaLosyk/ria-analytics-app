@@ -14,7 +14,6 @@ async function mainPage (ctx, next) {
  */
 async function search (ctx, next) {
     let response = await myDb.getSearchResults(ctx.request.body);
-    console.log(response);
     ctx.body = response;
     ctx.status = 201;
     await next();

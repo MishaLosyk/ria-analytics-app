@@ -43,11 +43,11 @@
 	<input type="date" id="inputDate" v-model="fromDate"> - <input type="date" id="inputDate1" v-model="toDate">
 </div>
 <div>
-<button @click.prevent="submit" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''" class="submitButton" >Show result</button>
-<button @click.prevent="restore"  class="resetButton"  name="reset" >Restore all</button>
-<button @click.prevent="union" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''"   class="submitButton" >Union</button>
-<button @click.prevent="unionall" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''"   class="submitButton" >Union All</button>
-<button @click.prevent="from" :disabled="fieldIndex == 'null'"  class="submitButton" >From</button>
+<button @click.prevent="submit" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0" class="submitButton" >Show result</button>
+<button @click.prevent="restore"  class="resetButton"  name="reset">Restore all</button>
+<button @click.prevent="union" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0"   class="submitButton" >Union</button>
+<button @click.prevent="unionall" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0"   class="submitButton" >Union All</button>
+<button @click.prevent="from" :disabled="fieldIndex == 'null'|| fromDate == ''|| toDate == '' || tempnames.length == 0"  class="submitButton" >From</button>
 </div>
     </form>
   </div>
@@ -79,16 +79,13 @@ methods:{
 	onChangeField(){
 		this.$bus.$emit('FieldChange', 'hi')
 		this.nameForChild = this.tempnames
-		console.log(this.nameForChild)
 	},
 	submit(e) {
 		this.submitform()
 		console.log("submit")
-		console.log(this.request)
 		if(this.temprequest.haveSubRequest){
 			this.addLastBranch(this.temprequest)
 		}
-		console.log("emit submit")
 		this.$emit('submit')
 		this.restore()
 },
@@ -231,6 +228,7 @@ var that = this
 		this.$bus.$emit('throwrestore', 'Hi')
 		this.fieldIndex = 'null'
 		this.countDataField = []
+		this.tempnames = []
 	}
 
 }

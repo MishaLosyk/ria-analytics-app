@@ -19,7 +19,7 @@ export default {
   },
 created() {
   // GET request
-  axios.get('http://localhost:8081/')             //замени localhost/getfielnames
+  axios.get('http://localhost:8081/')   //замени localhost/8081 http://109.108.247.29:8081/
     .then(response => {this.fieldname = response.data; this.startfieldnames = response.data});
 },
     data() { 
@@ -120,7 +120,6 @@ onUnionAll(){
 },
 
   async onSubmit(){
-    console.log(this.tempnames)
     if(this.temprequest.haveSubRequest){
     this.result.push(this.temprequest)
     this.fieldname = this.startfieldnames
@@ -132,7 +131,7 @@ onUnionAll(){
 
   console.log(this.result)
   const article = this.result;
-  const response = await axios.post("http://localhost:8081/search", article);  //замени localhost/api
+  const response = await axios.post("http://localhost:8081/search", article);  //замени localhost/search    http://109.108.247.29:8081/search
     if(response.data.hasOwnProperty('error')){
       console.log("error")
       this.recieved = 'error'
