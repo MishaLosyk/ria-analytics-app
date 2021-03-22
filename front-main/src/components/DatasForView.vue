@@ -1,14 +1,16 @@
 <template>
     <div v-show="show" >
-	<button class="remove" id="removeButton" @click.prevent="show = false"></button>
-	<select v-model="selectedItem" id="selectList">
-	<option value="none" selected disabled hidden>Select field</option>
-  	<option v-bind:key="recieved" v-for="name in fieldname" :value="name">{{name}}</option>
+	<button class="remove" id="removeButton" @click.prevent="clickedRemove"></button>
+	<select v-model="selectedItem" id="selectList" @change="onChange">
+	<option value="null" selected disabled hidden>Select field</option>
+  	<option v-bind:key="recieved" v-for="name in fieldname[fieldIndex][1]" :value="name">{{name.name}}</option>
 	</select>
-    <select v-model="table" id="selectListTable">
-    <option value="slon.facts">slon.facts</option>   
-  	<option value="slon.r_tags_v2">slon.r_tags_v2</option>
- 	<option value="mviews.calltracking">mviews.calltracking</option>
+    <select v-model="func" id="selectList">
+    <option value="null">Select function</option>
+    <option value="count">Count</option>   
+  	<option value="avg">Average</option>
+ 	<option value="max">Maximum</option>
+    <option value="min">Minimum</option>
 	</select>
 	</div>
 </template>
@@ -16,12 +18,14 @@
 <script>
 export default { 
     name:"DatasForView",
-    props:["fieldname",'request'],
+    props:["fieldname",'request',"fieldIndex", "recieved",'tempnames'],
     data(){
         return{
-            selectedItem: '',
-            table:'',
-            show: true
+            selectedItem: 'null',
+            func:'null',
+            show: true,
+            wasSelected:false,
+            oldSelect:null
         }
     },
 
@@ -35,16 +39,46 @@ export default {
 },
     methods:{
         submit(){
-            if(this.selectedItem != '' && this.table != ''&& this.show){
-                let temp = []
-                temp.push(this.selectedItem)
-                temp.push(this.table)
-                this.request.select.push(temp)
-                temp = []
+            if(this.func == 'null' && this.show){
+                let a ={
+                    name:this.selectedItem.name,
+                    type:this.selectedItem.type,
+                    value:this.selectedItem.name
                 }
+                this.request.select.push(a)
+                }
+            if(this.func != 'null' && this.show){
+                let b ={
+                    name:this.selectedItem.name,
+                    type:this.selectedItem.type,
+                    value:this.func+'('+this.selectedItem.name+")"
+                }
+                this.request.select.push(b)
+            }
+                
         },
             restore(){
-            this.selectedItem = this.inputField = '';
+            this.show = false
+            this.selectedItem = this.inputField = 'null';
+        },
+        onChange(){
+            this.$emit('onChange')
+            if(!this.wasSelected){
+            this.tempnames.push(this.selectedItem.name)
+            this.wasSelected = true
+            this.oldSelect = this.selectedItem.name
+            }
+            else{
+                let index = this.tempnames.indexOf(this.oldSelect)
+                this.tempnames.splice(index, 1)
+                this.tempnames.push(this.selectedItem.name)
+                this.oldSelect = this.selectedItem
+            }
+        },
+        clickedRemove(){
+            this.show = false
+            let index = this.tempnames.indexOf(this.oldSelect)
+            this.tempnames.splice(index, 1)
         }
     },
 }
@@ -90,6 +124,9 @@ export default {
 #removeButton{
 position: relative;
 bottom: 7.5px;
+}
+#removeButton:hover{
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 #inputValue{
 	border-radius: 4px;

@@ -2,7 +2,9 @@
     		<div v-if="show">
 			<button class="remove" id="removeButton" @click.prevent="show = false"></button>
 			<select v-model="selectedItem" id="selectList">
-            <option v-bind:key="recieved" v-for="name in fieldname" :value="name">{{name}}</option>
+	<option value="null" selected disabled hidden>Select field</option>
+    <option v-for="name in tempnames" :value="name">{{name}}</option>
+  	<!-- <option v-bind:key="recieved" v-for="name in fieldname[fieldIndex][1]" :value="name.name">{{name.name}}</option> -->
 			</select>
 			</div>
 </template>
@@ -10,10 +12,10 @@
 <script>
 export default {
     name:'SortBy',
-    props:["fieldname",'request'],
+    props:["fieldname",'request',"fieldIndex", "recieved",'tempnames'],
         data(){
         return{
-            selectedItem: '',
+            selectedItem: 'null',
             show: true
         }
     },
@@ -27,19 +29,24 @@ export default {
 },
     methods:{
         submit(){
-            if(this.selectedItem != '' && this.show){
+            if(this.selectedItem != 'null' && this.show){
                 this.request.sort.push(this.selectedItem)
                 }
         },
         restore(){
-            this.selectedItem = '';
+            this.selectedItem = 'null';
+            this.show = false
         }       
+
     },
 
 }
 </script>
 
 <style scoped>
+#removeButton:hover{
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
 .remove {
     transform: scale(var(--ggs,1));
     width: 20px;

@@ -3,30 +3,57 @@ const
     ClickHouse = require('@apla/clickhouse'),
     ch = new ClickHouse(config.clickhouse)
 ;
+
+
 /**
  * 
- * @param {*} table     table name
- * @param {*} select    certain fields in table 
- * @param {*} where     condition 
- * @param {*} group     group by @select 
- * @param {*} sort      sort by @select
- * @returns {String}    query message
+ * @param {*} obj  
+ * @returns {String} sql query 
  */
 
-function requestConstructor(table, select, where, group, sort) {
-    let request = 'SELECT ' + select + ' FROM ' + table;
+function queryConstructor (obj) {
 
-    //check if select element is Array
-    for(let i in select) {
-        let s = select[i];
-        if (Array.isArray(s)) {
-            request.includes('ARRAY JOIN') ? request += ', ' + s : request += ' ARRAY JOIN ' + s;
-        }
+    let select = '',
+        from = '',
+        where = '',
+        group = '',
+        sort = '',
+        arrayJoin = ''  
+    /// parse select items and elements for array join
+    for (let sel of obj.select) {
+        select == '' ? select += sel.value : select += ', ' + sel.value;
+        if (sel.type.includes('Array')) {
+            arrayJoin == '' ? arrayJoin += ' ARRAY JOIN ' + sel.name : arrayJoin += ', ' + sel.name;
+        } 
     }
-    if(where[0]) {request += ' WHERE ' + where}
-    if(group[0]) {request += ' GROUP BY ' + group}
-    if(sort[0]) {request += ' SORT BY ' + sort}
-    return request += ' limit 10';
+    /// recursive func for getting all subqueries
+    if(obj.haveSubRequest) {
+        from = '( ' + queryConstructor(obj.from) + ' )';
+    } else {
+        from = obj.from 
+    }
+    /// create other micro queries like 'WHERE user_id < 123'
+    obj.where.length > 0 ? where = ' WHERE ' + obj.where.join(' AND ') + ' AND ' + obj.date : where = ' WHERE ' + obj.date;
+    if (obj.group.length > 0) group = ' GROUP BY ' + obj.group.join(', ');
+    if (obj.sort.length > 0) sort = ' ORDER BY ' + obj.sort.join(', ');
+    return 'SELECT ' + select + ' FROM ' + from + arrayJoin + where + group + sort + ' limit 100';
+}
+
+
+
+/**
+ * 
+ * @param {*} body array of objects with 'UNION' strings between them  
+ * @returns {String} sql query 
+ */
+
+function queryUnion(body) {
+    if (body.length < 2) return queryConstructor(body[0]);
+    let query = '';
+    for (let i in body){
+        i % 2 == 0 ? query += queryConstructor(body[i]) + ' ' : query += body[i] + ' ';
+    }
+    return query;
 }
 
 
@@ -53,10 +80,16 @@ module.exports = {
      * @returns {Array} { meta: [], data: [] };
      */
     getSearchResults: async function getSearchResultsFromDb(body) {
-        let query = requestConstructor(...Object.values(body));
-        console.log(query);
-        const searchRequest = await ch.querying(query, {format: 'JSONCompact'});
-        return searchRequest;
+        try {    
+            let query = queryUnion(body); 
+                console.log(query);
+                const searchRequest = await ch.querying(query, {format: 'JSONCompact'});
+                return searchRequest;
+        }
+            catch(err) {
+                console.log('error is here.. ', err);
+                return {error: 'No data matching this request'};
+            }
         
     }
 

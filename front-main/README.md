@@ -1,4 +1,4 @@
-# ria-school-home2
+# ria-analyt-tools
 
 ## Project setup
 ```

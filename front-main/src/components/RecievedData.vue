@@ -1,14 +1,15 @@
 <template>
 <div>
-	<div v-if="recieved.data.length == 0"><div id="result">No match</div></div>
-	<div v-if="recieved.data.length > 0">
+	<div v-if="recieved == null"><div id="result">No match</div></div>
+		<div v-if="recieved == 'error'"><div id="result">No data matching this request</div></div>
+	<div v-if="recieved != null && recieved != 'error'">
 	<div id="result">Result:<b>{{recieved.data.length +' items'}}</b></div>
 	<div id ='table'>
 		<hr>
   <table class="table table-striped table-sm" >
     <thead id="table">
 	<tr>
-	<th scope="col" :key="recieved.columns" v-for="name in recieved.meta">{{name.name}}</th>
+	<th scope="col"  v-for="name in recieved.meta">{{name.name}}</th>
 	</tr>
     </thead>
     <tbody id="tableBody">
@@ -25,7 +26,7 @@
 <script>
 export default {
 name: "RecievedData",
-props:['recieved'],
+props:['recieved',],
 
 
 }
