@@ -2,7 +2,7 @@
   <div id="app" >
     <div id="icon"> <div id="ria">RIA</div>
       <div id="analyt">analytics</div></div>
-      <MakeRequest @submit="onSubmit" v-bind:fieldname="fieldname" v-bind:request="request"/>
+      <MakeRequest v-bind:tempnames="tempnames" @changefield ='onChangefield' @unionall='onUnionAll' @union='onUnion' @submit="onSubmit" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:result="result" v-bind:temprequest="temprequest" v-bind:tempfield="tempfield"/>
       <RecievedData v-bind:recieved="recieved"/>
   </div>
 </template>
@@ -19,41 +19,167 @@ export default {
   },
 created() {
   // GET request
-  axios.get('http://localhost:8081/')             //замени localhost/getfielnames
-    .then(response => this.fieldname = response);
+  axios.get('http://localhost:8081/')   //замени localhost/8081 http://109.108.247.29:8081/
+    .then(response => {this.fieldname = response.data; this.startfieldnames = response.data});
 },
     data() { 
 	return{
+
+    tempnames:[],
     request:{
-      select:[],
-      where:[],
-      group:[],
-      sort:[],
-      fromDate:[],
-      toDate:[]
-    },
+      haveSubRequest: false,
+      from: '',
+      select: [],
+      where:  [],
+      group:  [],
+      sort:   [],
+      date:   []       
+        },
+temprequest:{
+      haveSubRequest: false,
+      from: '',
+      select: [],
+      where:  [],
+      group:  [],
+      sort:   [],
+      date:   []       
+        },
+startfieldnames:null,
+tempfield:[[]],
 fieldname:null,
-//["EventDate","HourDate","MinuteDate","SecondDate","web_id","user_id","project_id","marka_id","event_id","owner_id","proposal_id","conversion_value"],
-recieved:{
-  'meta':[],
-  'data':[]
-}
+result:[],
+recieved:null,
   }
     },
 methods:{
-  async onSubmit(){
-  const article = this.request;
-  const response = await axios.post('http://localhost:8081/search', article);  //замени localhost/api
-    this.recieved = response;
-    this.request = {
-      select:[],
-      where:[],
-      group:[],
-      sort:[],
-      fromDate:[],
-      toDate:[]
+onChangefield(){
+  console.log(this.request.from)
+  this.tempfield[0].push(this.request.from,this.request.select)
+  this.fieldname = this.tempfield
+},
+
+
+
+onUnion(){
+  this.fieldname = this.startfieldnames
+    if(this.temprequest.haveSubRequest){
+     this.fieldname = this.startfieldnames
+    this.result.push(this.temprequest,'UNION')
     }
+    if(!this.temprequest.haveSubRequest){
+      this.result.push(this.request, "UNION")
+      }
+  console.log(this.result)
+       this.temprequest={
+      haveSubRequest: false,
+      from: '',
+      select: [],
+      where:  [],
+      group:  [],
+      sort:   [],
+      date:   []       
+       }
+      this.request = {
+      haveSubRequest: false,
+      from: '',
+      select: [],
+      where:  [],
+      group:  [],
+      sort:   [],
+      date:   []       
+        }
+},
+
+onUnionAll(){
+    if(this.temprequest.haveSubRequest){
+    this.fieldname = this.startfieldnames
+    this.result.push(this.temprequest,'UNION ALL')
+    }
+    if(!this.temprequest.haveSubRequest){
+      this.result.push(this.request, "UNION ALL")
+      }
+       this.temprequest={
+      haveSubRequest: false,
+      from: '',
+      select: [],
+      where:  [],
+      group:  [],
+      sort:   [],
+      date:   []       
+       }
+      this.request = {
+      haveSubRequest: false,
+      from: '',
+      select: [],
+      where:  [],
+      group:  [],
+      sort:   [],
+      date:   []       
+        }
+
+},
+
+  async onSubmit(){
+    if(this.temprequest.haveSubRequest){
+    this.result.push(this.temprequest)
+    this.fieldname = this.startfieldnames
+    }
+    if(!this.temprequest.haveSubRequest){
+      this.result.push(this.request)
+      }
+
+
+  console.log(this.result)
+  const article = this.result;
+  const response = await axios.post("http://localhost:8081/search", article);  //замени localhost/search    http://109.108.247.29:8081/search
+    if(response.data.hasOwnProperty('error')){
+      console.log("error")
+      this.recieved = 'error'
+    }
+    else{
+      this.recieved = response.data;
+    }
+    this.result = []
+    console.log(this.recieved)
+    this.temprequest={
+      haveSubRequest: false,
+      from: '',
+      select: [],
+      where:  [],
+      group:  [],
+      sort:   [],
+      date:   []       
+       }
+    this.request = {
+      haveSubRequest: false,
+      from: '',
+      select: [],
+      where:  [],
+      group:  [],
+      sort:   [],
+      date:   []       
+        }
+        return
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 }
 </script>
