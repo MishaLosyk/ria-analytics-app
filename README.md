@@ -1,24 +1,16 @@
-Analytics app
-===============================
-    
-quick start
-===========
+# ria-analyt-tools
 
-**Install modules**
-```sh
-$ npm install
+## Project setup
+```
+npm install
 ```
 
-**Start app:**
-```sh
-$ node ./index.js
+### Compiles and hot-reloads for development
+```
+npm run serve
 ```
 
-**Address**
-
-Web application will be available on "http://localhost:8081"
-
-**Front-end**
-
-You can find front-end app (vue.js) in folder **"front-main"**.
-Please check there readme to launch UI application.
+### Compiles and minifies for production
+```
+npm run build
+```
