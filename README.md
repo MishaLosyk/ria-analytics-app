@@ -21,4 +21,4 @@ Web application will be available on "http://localhost:8081"
 **Front-end**
 
 You can find front-end app (vue.js) in folder **"front-main"**.
-Please check there readme to launch UI application.
+Please check there readme to launch UI application.aa
