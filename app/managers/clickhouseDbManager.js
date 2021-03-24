@@ -18,7 +18,8 @@ function queryConstructor (obj) {
         where = '',
         group = '',
         sort = '',
-        arrayJoin = ''  
+        arrayJoin = '',
+        limit = ''  
     /// parse select items and elements for array join
     for (let sel of obj.select) {
         select == '' ? select += sel.value : select += ', ' + sel.value;
@@ -36,7 +37,8 @@ function queryConstructor (obj) {
     obj.where.length > 0 ? where = ' WHERE ' + obj.where.join(' AND ') + ' AND ' + obj.date : where = ' WHERE ' + obj.date;
     if (obj.group.length > 0) group = ' GROUP BY ' + obj.group.join(', ');
     if (obj.sort.length > 0) sort = ' ORDER BY ' + obj.sort.join(', ');
-    return 'SELECT ' + select + ' FROM ' + from + arrayJoin + where + group + sort + ' limit 100';
+    obj.limit == '' ? limit = ' limit 100' : limit = ' limit ' + obj.limit;
+    return 'SELECT ' + select + ' FROM ' + from + arrayJoin + where + group + sort + limit;
 }
 
 
@@ -80,12 +82,13 @@ module.exports = {
      * @returns {Array} { meta: [], data: [] };
      */
     getSearchResults: async function getSearchResultsFromDb(body) {
-        try {    
+        try {   
+            // console.log(body); 
             let query = queryUnion(body); 
                 console.log(query);
                 const searchRequest = await ch.querying(query, {format: 'JSONCompact'});
                 console.log(searchRequest);
-                return searchRequest;
+                return 'searchRequest';
         }
             catch(err) {
                 console.log('error is here.. ', err);
