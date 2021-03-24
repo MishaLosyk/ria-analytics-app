@@ -1,24 +1,25 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link style="margin-right:10px" to="/">Конструктор</router-link> 
-      <router-link style="margin-right:10px" to="/admin">Адмін панель</router-link>
-      <router-link style="margin-right:10px" to="/user">Кабінет користувача</router-link>
-    </div>
-    <router-view />
+  <div id="app" >
+    <div id="icon"> <div id="ria">RIA</div>
+      <div id="analyt">analytics</div></div>
+      <MakeRequest v-bind:tempnames="tempnames" @changefield ='onChangefield' @unionall='onUnionAll' @union='onUnion' @submit="onSubmit" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:result="result" v-bind:temprequest="temprequest" v-bind:tempfield="tempfield"/>
+      <RecievedData v-bind:recieved="recieved"/>
   </div>
 </template>
 
 <script>
+import MakeRequest from "@/components/constructor/MakeRequest";
+import RecievedData from "@/components/constructor/RecievedData";
+import axios from 'axios';
 export default {
-  name: 'App',
+  name: 'Constructor',
   components: {
     MakeRequest,
     RecievedData
   },
 created() {
   // GET request
-  axios.get('http://localhost:8081/')   //замени localhost/8081 http://109.108.247.29:8081/
+  axios.get('http://109.108.247.29:8081/')   //замени localhost/8081 http://109.108.247.29:8081/
     .then(response => {this.fieldname = response.data; this.startfieldnames = response.data});
 },
     data() { 
@@ -136,7 +137,7 @@ onUnionAll(){
 
   console.log(this.result)
   const article = this.result;
-  const response = await axios.post("http://localhost:8081/search", article);  //замени localhost/search    http://109.108.247.29:8081/search
+  const response = await axios.post("http://109.108.247.29:8081/search", article);  //замени localhost/search    http://109.108.247.29:8081/search
     if(response.data.hasOwnProperty('error')){
       console.log("error")
       this.recieved = 'error'
@@ -168,50 +169,41 @@ onUnionAll(){
         }
         return
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
 }
 </script>
 
-
-<style>
+<style scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  font-family: 'Montserrat', sans-serif;
 }
-#nav {
-  padding: 30px;
-  float: right;
+#icon{
+  position: absolute;
+  height: 79px;
+width: 169px;
+left: 35px;
+top: 34px;
+border-radius: 0px;
+background: rgba(0, 47, 68, 1);
 }
-
-#nav a {
-  font-weight: bold;
-  color: #f3f3f3;
+#ria{
+font-size: 28px;
+font-style: normal;
+font-weight: 800;
+line-height: 32px;
+letter-spacing: 0.07em;
+text-align: left;
+padding-left:19px;
+color: white;
+padding-top: 14px;
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+#analyt{
+  position: relative;
+  bottom: 10px;
+  color: rgb(212, 232, 252);
+  text-align: left;
+  padding-left:19px;
+  font-size: 22px;
 }
 </style>
