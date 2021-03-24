@@ -43,7 +43,7 @@ export default {
                 let a ={
                     name:this.selectedItem.name,
                     type:this.selectedItem.type,
-                    value:this.selectedItem.name
+                    value:this.fieldname[this.fieldIndex][0]+'.'+this.selectedItem.name
                 }
                 this.request.select.push(a)
                 }
@@ -51,11 +51,11 @@ export default {
                 let b ={
                     name:this.selectedItem.name,
                     type:this.selectedItem.type,
-                    value:this.func+'('+this.selectedItem.name+")"
+                    value:this.func+'('+this.fieldname[this.fieldIndex][0]+'.'+this.selectedItem.name+")"
                 }
                 this.request.select.push(b)
             }
-                
+
         },
             restore(){
             this.show = false

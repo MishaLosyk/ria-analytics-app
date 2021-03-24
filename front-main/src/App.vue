@@ -19,7 +19,7 @@ export default {
   },
 created() {
   // GET request
-  axios.get('http://localhost:8081/')   //замени localhost/8081 http://109.108.247.29:8081/
+  axios.get('http://109.108.247.29:8081/')   //замени localhost/8081 http://109.108.247.29:8081/
     .then(response => {this.fieldname = response.data; this.startfieldnames = response.data});
 },
     data() { 
@@ -33,7 +33,8 @@ created() {
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+      limit:0     
         },
 temprequest:{
       haveSubRequest: false,
@@ -42,7 +43,8 @@ temprequest:{
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+      limit:0       
         },
 startfieldnames:null,
 tempfield:[[]],
@@ -77,7 +79,8 @@ onUnion(){
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+      limit:0        
        }
       this.request = {
       haveSubRequest: false,
@@ -86,7 +89,8 @@ onUnion(){
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+      limit:0       
         }
 },
 
@@ -105,7 +109,8 @@ onUnionAll(){
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+      limit:0       
        }
       this.request = {
       haveSubRequest: false,
@@ -114,7 +119,8 @@ onUnionAll(){
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+      limit:0      
         }
 
 },
@@ -131,7 +137,7 @@ onUnionAll(){
 
   console.log(this.result)
   const article = this.result;
-  const response = await axios.post("http://localhost:8081/search", article);  //замени localhost/search    http://109.108.247.29:8081/search
+  const response = await axios.post("http://109.108.247.29:8081/search", article);  //замени localhost/search    http://109.108.247.29:8081/search
     if(response.data.hasOwnProperty('error')){
       console.log("error")
       this.recieved = 'error'
@@ -148,7 +154,8 @@ onUnionAll(){
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+      limit:0      
        }
     this.request = {
       haveSubRequest: false,
@@ -157,7 +164,8 @@ onUnionAll(){
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+      limit:0  
         }
         return
   }
