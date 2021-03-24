@@ -11,7 +11,7 @@
             <option v-for="(table,index) of tablename" :value="index">{{table[0]}}</option>
         </select><br>
         <div style="margin-top:16px">
-                    Використовуючи<br>
+                    <div>Використовуючи</div><br>
         <select v-model="usingname" id='selectList'>
         <option hidden selected disabled value="">Виберіть поле</option>
         <option v-for="field of fields" :value="field.name">{{field.name}}</option>
