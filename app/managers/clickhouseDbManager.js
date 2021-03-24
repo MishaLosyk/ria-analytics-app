@@ -88,7 +88,7 @@ module.exports = {
                 console.log(query);
                 const searchRequest = await ch.querying(query, {format: 'JSONCompact'});
                 console.log(searchRequest);
-                return 'searchRequest';
+                return searchRequest;
         }
             catch(err) {
                 console.log('error is here.. ', err);
