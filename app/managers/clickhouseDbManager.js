@@ -84,6 +84,7 @@ module.exports = {
             let query = queryUnion(body); 
                 console.log(query);
                 const searchRequest = await ch.querying(query, {format: 'JSONCompact'});
+                console.log(searchRequest);
                 return searchRequest;
         }
             catch(err) {

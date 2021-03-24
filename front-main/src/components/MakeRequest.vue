@@ -1,14 +1,15 @@
 <template>
   <div id="global">
-    <!-- <Error /> -->
+
 
     <form>
 <div class="container">
 	<div style="margin-left: 36px">Datas for view</div>
-	    <select v-model="fieldIndex" id="selectListTable">
+	    <select @change="tablechoose" v-model="fieldIndex" id="selectListTable">
 		<option value="null" selected disabled hidden>Select table</option>
     <option v-for="(name,index) in fieldname" :value="index">{{name[0]}}</option>   
-	</select>
+	</select><br>
+	<input type="date" id="inputDate" v-model="fromDate"> - <input type="date" id="inputDate1" v-model="toDate">
 </div>
 	<div class="container">
 	<DatasForView @onChange="onChangeField" v-bind:fieldIndex="fieldIndex" v-for="n of countDataField" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"></DatasForView>
@@ -37,17 +38,24 @@
 			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addGroupBy">+ Add new field</button>
 		</div>
 </div>
-<div class="container" >
+<div class="container" v-if="!isJoin">
 		<hr id="blockHr">
-	<div style="margin-left: 36px">Period</div>
-	<input type="date" id="inputDate" v-model="fromDate"> - <input type="date" id="inputDate1" v-model="toDate">
+	<div style="margin-left: 36px">Join <input type="checkbox" @click="ifJoin = !ifJoin"></div>
+	<Join v-if="ifJoin" @submitjoin='onsubmitjoin' @index="onIndex"   @selectjoin="onSelectJoin"  v-bind:tablename="tablename" v-bind:fieldIndex="fieldIndex" v-bind:fieldname="fieldname" v-bind:request="request"/>
 </div>
 <div>
-<button @click.prevent="submit" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0" class="submitButton" >Show result</button>
-<button @click.prevent="restore"  class="resetButton"  name="reset">Restore all</button>
+
+
+
+<div v-if="!ifJoin">
 <button @click.prevent="union" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0"   class="submitButton" >Union</button>
 <button @click.prevent="unionall" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0"   class="submitButton" >Union All</button>
 <button @click.prevent="from" :disabled="fieldIndex == 'null'|| fromDate == ''|| toDate == '' || tempnames.length == 0"  class="submitButton" >From</button>
+</div>
+<input v-model="limit" v-if="!ifJoin"  placeholder="Limit" class="limit">
+<button @click.prevent="submit" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0" class="submitButton"  v-if="!ifJoin">Show result</button>
+<button v-if="ifJoin" @click.prevent="pressOk"  :disabled="fieldIndex == 'null'|| fromDate == ''|| toDate == '' || tempnames.length == 0 || joinvalue == '' "  class="submitButton">Ok</button>
+<button @click.prevent="restore"  class="resetButton"  name="reset">Restore all</button>
 </div>
     </form>
   </div>
@@ -59,9 +67,11 @@ import DatasForView from "@/components/DatasForView";
 import Where from "@/components/Where";
 import SortBy from "@/components/SortBy";
 import GroupBy from "@/components/GroupBy";
+import Join from "@/components/Join";
 export default {
+
   name: "MakeRequest",
-  components: {DatasForView,Where, SortBy,GroupBy},
+  components: {DatasForView,Where, SortBy,GroupBy,Join},
   props:["recieved","request","fieldname",'result','temprequest','tempfield','tempnames'],
   data() { 
 	return{		
@@ -73,19 +83,70 @@ fromDate:'',
 toDate:'',
 fieldIndex:'null',
 nameForChild:null,
+ifJoin:false,
+isJoin:false,
+joinvalue:'',
+tablename: [],
+limit:""
 }
   },
 methods:{
+	onsubmitjoin(value){
+		console.log(value)
+		this.request.from = value
+	},
+	onIndex(i){
+		let temp = []
+		temp.push(this.fieldname[i])
+		this.fieldname = temp
+		this.fieldIndex = 0
+	},
+	tablechoose(){
+		this.tablename = []
+		let a = this.fieldname.slice()
+		a.forEach(element => {
+			if(this.fieldname[this.fieldIndex] != element){
+				this.tablename.push(element)
+			}
+		})
+	},
+	
+
+	pressOk(){
+		this.isJoin = true
+		this.ifJoin = false
+		this.request.from = this.fieldname[this.fieldIndex][0]
+		this.$bus.$emit('throw', 'Hi')
+		this.$bus.$emit('throwrestore', 'Hi')
+		this.countDataField = []
+		this.tempnames = []
+		console.log(this.request)
+	},
+
+	onSelectJoin(value){
+		this.joinvalue = value
+	},
+
+
+
 	onChangeField(){
 		this.$bus.$emit('FieldChange', 'hi')
 		this.nameForChild = this.tempnames
 	},
 	submit(e) {
+		if(!this.request.haveSubRequest && this.request.from != ''){
+		this.$bus.$emit('throw', 'Hi')
+		this.request.date.push("EventDate <="+"('"+this.toDate+"')"+" AND EventDate >="+"('"+this.fromDate+"')")
+		this.request.limit = this.limit
+		}
+		else{		
 		this.submitform()
 		console.log("submit")
 		if(this.temprequest.haveSubRequest){
 			this.addLastBranch(this.temprequest)
 		}
+		}
+		this.isJoin = true
 		this.$emit('submit')
 		this.restore()
 },
@@ -96,6 +157,7 @@ union(){
 		this.addLastBranch(this.temprequest)
 		}
 	this.$emit('union')
+	this.isJoin = true
 	this.restore()
 
 },
@@ -104,6 +166,7 @@ unionall(){
 	this.submitform()
 	this.$emit('unionall')
 	this.restore()
+	this.isJoin = true
 		if(this.temprequest.haveSubRequest){
 		this.addLastBranch(this.temprequest)
 		}
@@ -113,7 +176,7 @@ unionall(){
 from(){
 	this.$bus.$emit('throw', 'Hi')
 	if(this.toDate != '' && this.fromDate != ''){
-	this.request.date.push("EventDate <"+"('"+this.toDate+"')"+" AND EventDate >"+"('"+this.fromDate+"')")}
+	this.request.date.push("EventDate <="+"('"+this.toDate+"')"+" AND EventDate >="+"('"+this.fromDate+"')")}
 	this.request.from = this.fieldname[this.fieldIndex][0]
 	this.$emit('changefield')
 	if(!this.temprequest.haveSubRequest){
@@ -122,6 +185,7 @@ from(){
 		this.temprequest.group = this.request.group
 		this.temprequest.sort = this.request.sort
 		this.temprequest.date = this.request.date
+		this.temprequest.limit = this.limit
 		this.temprequest.from = {
       haveSubRequest: false,
       from: '',
@@ -129,7 +193,8 @@ from(){
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+	  limit: 0,
         }
 		this.temprequest.haveSubRequest = true
 		this.requestclear()
@@ -144,7 +209,9 @@ from(){
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+	  limit:0  
+
 		}
 	}
 this.restore()
@@ -187,7 +254,8 @@ var that = this
       where:  [],
       group:  [],
       sort:   [],
-      date:   []       
+      date:   [],
+	  limit:0        
         }
 
 	}
@@ -201,12 +269,14 @@ var that = this
 		this.request.group = []
 		this.request.sort = []
 		this.request.date = []
+		this.request.limit = 0
 	},
 
 	submitform(){
 		this.$bus.$emit('throw', 'Hi')
 		this.request.from = this.fieldname[this.fieldIndex][0]
-		this.request.date.push("EventDate <"+"('"+this.toDate+"')"+" AND EventDate >"+"('"+this.fromDate+"')")
+		this.request.date.push("EventDate <="+"('"+this.toDate+"')"+" AND EventDate >="+"('"+this.fromDate+"')")
+		this.request.limit = this.limit
 	},
 
 
@@ -229,6 +299,7 @@ var that = this
 		this.fieldIndex = 'null'
 		this.countDataField = []
 		this.tempnames = []
+		this.limit = ''
 	}
 
 }
@@ -251,7 +322,14 @@ var that = this
 	margin-top: 15px;
 	margin-left: 36px;
 }
-
+.limit{
+	border-radius: 4px;
+	width: 145px;
+	height: 45px;
+	margin-left: 16px;
+	border: 1px solid #7DA5B7;
+	color: rgb(0, 0, 0);
+}
 
 
 #global{
@@ -354,7 +432,7 @@ var that = this
 	background: rgba(33, 155, 231, 1);
 	color: rgba(255, 255, 255, 1);
 	text-align: center;
-	margin-bottom: 40px;
+	margin-bottom: 20px;
 	border: 0;
 	padding: 0;
 	cursor: pointer;
