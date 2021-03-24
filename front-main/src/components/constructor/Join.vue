@@ -1,19 +1,19 @@
 <template>
     <div class="case">
         <select @change="selectjoin" v-model="value" id='selectList'>
-            <option hidden selected disabled value="">Select join type</option>
-            <option value="JOIN">Inner join</option>
-            <option value="LEFT JOIN">Left join</option>
-            <option value="RIGHT JOIN">Right join</option>
+            <option hidden selected disabled value="">Виберіть тип</option>
+            <option value="JOIN">Приєднати</option>
+            <option value="LEFT JOIN">Приєднати зліва</option>
+            <option value="RIGHT JOIN">Приєднати з права</option>
         </select>
         <select v-model="tableindex" @change="selecttable" id='selectList'>
-            <option hidden selected disabled value="">Select table</option>
+            <option hidden selected disabled value="">Виберіть таблицю</option>
             <option v-for="(table,index) of tablename" :value="index">{{table[0]}}</option>
         </select><br>
         <div style="margin-top:16px">
-                    Using<br>
+                    Використовуючи<br>
         <select v-model="usingname" id='selectList'>
-        <option hidden selected disabled value="">Using</option>
+        <option hidden selected disabled value="">Виберіть поле</option>
         <option v-for="field of fields" :value="field.name">{{field.name}}</option>
         </select>
 

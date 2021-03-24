@@ -2,15 +2,15 @@
     <div v-show="show" >
 	<button class="remove" id="removeButton" @click.prevent="clickedRemove"></button>
 	<select v-model="selectedItem" id="selectList" @change="onChange">
-	<option value="null" selected disabled hidden>Select field</option>
+	<option value="null" selected disabled hidden>Виберіть поле</option>
   	<option v-bind:key="recieved" v-for="name in fieldname[fieldIndex][1]" :value="name">{{name.name}}</option>
 	</select>
     <select v-model="func" id="selectList">
-    <option value="null">Select function</option>
-    <option value="count">Count</option>   
-  	<option value="avg">Average</option>
- 	<option value="max">Maximum</option>
-    <option value="min">Minimum</option>
+    <option value="null">Виберіть функцію</option>
+    <option value="count">Порахувати</option>   
+  	<option value="avg">Середнє</option>
+ 	<option value="max">Максимум</option>
+    <option value="min">Мінімум</option>
 	</select>
 	</div>
 </template>

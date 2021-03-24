@@ -4,6 +4,7 @@
 	<select v-model="selectedItem" id="selectList">
 	<option value="null" selected disabled hidden>Select field</option>
 	<option v-for="name in tempnames" :value="name">{{name}}</option>
+  	<!-- <option v-bind:key="recieved" v-for="name in fieldname[fieldIndex][1]" :value="name.name">{{name.name}}</option> -->
 	</select>
 	<select v-model="condition" id="selectListCondition">
 	<option value="" selected disabled hidden>Select condition</option>
@@ -15,6 +16,7 @@
 	<input id="inputValueCondition" type="text" placeholder=" Value?" v-model="inputField">
 	</div>   
 </template>
+
 <script>
 export default {
     name:"Where",

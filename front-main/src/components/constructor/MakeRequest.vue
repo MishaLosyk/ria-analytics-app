@@ -4,58 +4,61 @@
 
     <form>
 <div class="container">
-	<div style="margin-left: 36px">Datas for view</div>
+	<div style="margin-left: 36px">Данні</div>
 	    <select @change="tablechoose" v-model="fieldIndex" id="selectListTable">
-		<option value="null" selected disabled hidden>Select table</option>
+		<option value="null" selected disabled hidden>Виберіть таблицю</option>
     <option v-for="(name,index) in fieldname" :value="index">{{name[0]}}</option>   
 	</select><br>
 	<input type="date" id="inputDate" v-model="fromDate"> - <input type="date" id="inputDate1" v-model="toDate">
 </div>
 	<div class="container">
 	<DatasForView @onChange="onChangeField" v-bind:fieldIndex="fieldIndex" v-for="n of countDataField" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"></DatasForView>
-	<button id ="newFieldButton" :disabled="fieldIndex == 'null' " @click.prevent="addDataField">+ Add new field</button>
+	<button id ="newFieldButton" :disabled="fieldIndex == 'null' " @click.prevent="addDataField">+ Добавити нове поле</button>
 	<hr id="blockHr">
 </div>
 
 
 <div class="container">
-	<div style="margin-left: 36px">Where</div>
+	<div style="margin-left: 36px">З умовою</div>
 	<Where v-bind:fieldIndex="fieldIndex" v-for="n in countWhere" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"/>
-	<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addWhere">+ Add new field</button>
+	<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addWhere">+ Добавити нове поле</button>
 	<hr id="blockHr">
 </div>
 <div class="containerSplit">
 	<div>
 		<div class="Rcontainer">
-		<div style="margin-left: 36px">Sort by</div>
+		<div style="margin-left: 36px">Сортувати за</div>
 			<SortBy v-bind:fieldIndex="fieldIndex" v-for="n in countSortBy" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"/>
-			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addSortBy">+ Add new field</button>
+			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addSortBy">+ Добавити нове поле</button>
 		</div>
 	</div>
 	<div class="Lcontainer">
-		<div style="margin-left: 36px">Group by</div>
+		<div style="margin-left: 36px">Групувати по</div>
 			<GroupBy v-bind:fieldIndex="fieldIndex" v-for="n in countGroupBy" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"/>
-			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addGroupBy">+ Add new field</button>
+			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addGroupBy">+ Добавити нове поле</button>
 		</div>
 </div>
 <div class="container" v-if="!isJoin">
 		<hr id="blockHr">
-	<div style="margin-left: 36px">Join <input type="checkbox" @click="ifJoin = !ifJoin"></div>
+	<div style="margin-left: 36px">Приєднати колонки <input type="checkbox" @click="ifJoin = !ifJoin"></div>
 	<Join v-if="ifJoin" @submitjoin='onsubmitjoin' @index="onIndex"   @selectjoin="onSelectJoin"  v-bind:tablename="tablename" v-bind:fieldIndex="fieldIndex" v-bind:fieldname="fieldname" v-bind:request="request"/>
+		<hr id="blockHr">
 </div>
 <div>
 
 
 
-<div v-if="!ifJoin">
-<button @click.prevent="union" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0"   class="submitButton" >Union</button>
-<button @click.prevent="unionall" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0"   class="submitButton" >Union All</button>
-<button @click.prevent="from" :disabled="fieldIndex == 'null'|| fromDate == ''|| toDate == '' || tempnames.length == 0"  class="submitButton" >From</button>
+<div id="topbuttons" v-if="!ifJoin">
+<button @click.prevent="union" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0"   class="submitButton" >Приєднати поля</button>
+<button @click.prevent="unionall" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0"   class="submitButton" >Приєднати всі поля</button>
+<button @click.prevent="from" :disabled="fieldIndex == 'null'|| fromDate == ''|| toDate == '' || tempnames.length == 0"  class="submitButton" style="position:relative; top:10px;">Підзапит</button>
 </div>
+<div id="botbuttons">
 <input v-model="limit" v-if="!ifJoin"  placeholder="Limit" class="limit">
-<button @click.prevent="submit" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0" class="submitButton"  v-if="!ifJoin">Show result</button>
-<button v-if="ifJoin" @click.prevent="pressOk"  :disabled="fieldIndex == 'null'|| fromDate == ''|| toDate == '' || tempnames.length == 0 || joinvalue == '' "  class="submitButton">Ok</button>
-<button @click.prevent="restore"  class="resetButton"  name="reset">Restore all</button>
+<button @click.prevent="submit" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0" class="submitButton"  v-if="!ifJoin" style="position:relative; bottom:10px;">Показати результат</button>
+<button v-if="ifJoin" @click.prevent="pressOk"  :disabled="fieldIndex == 'null'|| fromDate == ''|| toDate == '' || tempnames.length == 0 || joinvalue == '' "  class="submitButton">ОК</button>
+<button @click.prevent="restore"  class="resetButton"  name="reset">Ресет</button>
+</div>
 </div>
     </form>
   </div>
@@ -307,6 +310,14 @@ var that = this
 </script>
 
 <style scoped>
+#topbuttons{
+	margin-top: 16px;
+	margin-bottom: 16px;
+}
+#botbuttons{
+	margin-top: 20px;
+	margin-bottom: 16px;
+}
 #selectListTable{
 	border-radius: 4px;
 	font-size: 14px;
@@ -432,7 +443,6 @@ var that = this
 	background: rgba(33, 155, 231, 1);
 	color: rgba(255, 255, 255, 1);
 	text-align: center;
-	margin-bottom: 20px;
 	border: 0;
 	padding: 0;
 	cursor: pointer;
