@@ -54,7 +54,7 @@
 <button @click.prevent="from" :disabled="fieldIndex == 'null'|| fromDate == ''|| toDate == '' || tempnames.length == 0"  class="submitButton" style="position:relative; top:10px;">Підзапит</button>
 </div>
 <div id="botbuttons">
-<input v-model="limit" v-if="!ifJoin"  placeholder="Limit" class="limit">
+<input v-model="limit" v-if="!ifJoin"  placeholder="Ліміт" class="limit">
 <button @click.prevent="submit" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0" class="submitButton"  v-if="!ifJoin" style="position:relative; bottom:10px;">Показати результат</button>
 <button v-if="ifJoin" @click.prevent="pressOk"  :disabled="fieldIndex == 'null'|| fromDate == ''|| toDate == '' || tempnames.length == 0 || joinvalue == '' "  class="submitButton">ОК</button>
 <button @click.prevent="restore"  class="resetButton"  name="reset">Ресет</button>

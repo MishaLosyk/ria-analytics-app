@@ -2,9 +2,8 @@
     		<div v-if="show">
 			<button class="remove" id="removeButton" @click.prevent="show = false"></button>
 			<select v-model="selectedItem" id="selectList">
-	<option value="null" selected disabled hidden>Select field</option>
+	<option value="null" selected disabled hidden>Виберіть поле</option>
     <option v-for="name in tempnames" :value="name">{{name}}</option>
-  	<!-- <option v-bind:key="recieved" v-for="name in fieldname[fieldIndex][1]" :value="name.name">{{name.name}}</option> -->
 			</select>
 			</div>
 </template>

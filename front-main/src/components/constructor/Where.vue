@@ -2,18 +2,17 @@
  	<div v-if="show">
 	<button class="remove" id="removeButton" @click.prevent="show = false"></button>
 	<select v-model="selectedItem" id="selectList">
-	<option value="null" selected disabled hidden>Select field</option>
+	<option value="null" selected disabled hidden>Виберіть поле</option>
 	<option v-for="name in tempnames" :value="name">{{name}}</option>
-  	<!-- <option v-bind:key="recieved" v-for="name in fieldname[fieldIndex][1]" :value="name.name">{{name.name}}</option> -->
 	</select>
 	<select v-model="condition" id="selectListCondition">
-	<option value="" selected disabled hidden>Select condition</option>
-    <option value="=">Equal</option>   
-  	<option value="!=">Not</option>
- 	<option value=">">More</option>
-    <option value="<">Less</option>
+	<option value="" selected disabled hidden>Виберіть умову</option>
+    <option value="=">Рівне</option>   
+  	<option value="!=">Не</option>
+ 	<option value=">">Більше</option>
+    <option value="<">Меньше</option>
 	</select>
-	<input id="inputValueCondition" type="text" placeholder=" Value?" v-model="inputField">
+	<input id="inputValueCondition" type="text" placeholder=" Значення?" v-model="inputField">
 	</div>   
 </template>
 
