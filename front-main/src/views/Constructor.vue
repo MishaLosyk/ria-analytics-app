@@ -138,8 +138,6 @@ onUnionAll(){
   console.log(this.result)
   const article = this.result;
   const response = await axios.post("http://localhost:8081/search", article);  //замени localhost/search    http://109.108.247.29:8081/search
-
-  console.log(response)
   
     if(response.data.hasOwnProperty('error')){
       console.log("error")
@@ -149,7 +147,6 @@ onUnionAll(){
       this.recieved = response.data;
     }
     this.result = []
-    console.log(this.response.data)
     this.temprequest={
       haveSubRequest: false,
       from: '',

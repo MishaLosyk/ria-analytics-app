@@ -152,6 +152,8 @@ methods:{
 		this.isJoin = true
 		this.$emit('submit')
 		this.restore()
+		ifJoin = false
+		isJoin = false
 },
 
 union(){
