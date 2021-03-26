@@ -1,0 +1,228 @@
+<template>
+    <div class="userBlock">
+        <div>Додати нового користувача</div>
+        <div>
+            <input class="input1" type="text" placeholder="Логін" v-model="login"> 
+            <input class="inputU" type="text" placeholder="Пароль" v-model="pass">
+            <input class="inputU" type="text" placeholder="Ім'я" v-model="name">
+            <input class="inputU" type="text" placeholder="Прізвище" v-model="surname">
+        </div>
+        <div id="access">Доступ</div>
+        <div id="accessBody">
+        <div>
+        <button @click="addTable" :disabled="selectTable == ''" class="add"></button>
+        <select v-model="selectTable" id="selectTable">
+            <option selected hidden disabled value="">Виберіть таблицю</option>
+            <option v-for="table of temptables" :key="table"  :value="table">{{table}}</option>
+        </select>
+        </div>
+        <div id="remBlock">
+            <div><button class="remove" @click="remTable" :disabled="delTable == ''"></button>
+            <div id="remName">
+            <select v-model="delTable" id="selectTable">
+            <option selected hidden disabled value="">Виберіть таблицю</option>
+            <option v-for="tabl of chosenTables" :key="tabl"  :value="tabl">{{tabl}}</option>
+            </select>
+            </div></div>
+        </div>
+        <button @click="submitNewUser" :disabled="login == '' || pass == '' || name == '' || surname == '' || chosenTables.length == 0"  id ='addUserButton'>Додати</button>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name:"NewUser",
+    data(){
+        return{
+            tables:['slon.facts','slon.r_tags_v2','mviews.calltracking'],
+            temptables:['slon.facts','slon.r_tags_v2','mviews.calltracking'],
+            selectTable:'',
+            chosenTables:[],
+            delTable:'',
+            login:'',
+            pass:'',
+            name:'',
+            surname:'',
+
+        }
+    },
+    methods:{
+
+        addTable(){
+            this.chosenTables.push(this.selectTable)
+            let i = this.temptables.indexOf(this.selectTable)
+            this.temptables.splice(i, 1)
+            this.selectTable = ''
+        },
+        remTable(){
+            this.temptables.push(this.delTable)
+            let i = this.chosenTables.indexOf(this.delTable)
+            this.chosenTables.splice(i,1)
+            this.delTable = ''
+        },
+        submitNewUser(){
+            let a = {
+                    email : this.login,
+                    password: this.pass,
+                    name: this.name,
+                    surname: this.surname,
+                    tables: this.chosenTables.toString()    
+                    }
+            console.log(a)
+            let responce = {
+                            user_id: 'user_id',
+                            email : 'email',
+                            password: 'password',
+                            name: 'name',
+                            surname: 'surname',
+                            tables: 'tables',
+                            api_key: 'api_key'     
+                            }
+            alert('Create new user with id '+ responce.user_id)
+        }
+}
+}
+</script>
+
+<style scoped>
+#addUserButton{
+	margin-top: 100px;   
+	background: rgba(121, 190, 0, 1);
+	height: 35px;
+	width: 206px;
+	border-radius: 4px;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	font-size: 14px;
+	line-height: 17px;
+	letter-spacing: 0.03em;
+	color: #FFFFFF;
+	margin-bottom: 30px;
+}
+#addUserButton:hover:active{
+	box-shadow: 0 0 10px 0 #d8d9da inset, 0 0 10px 4px #247e18;
+}
+#remName{
+    display: inline;
+    position: relative;
+}
+ .remove {
+    background-color: transparent;    
+    position: relative;
+    transform: scale(var(--ggs,1));
+    width: 22px;
+    height: 22px;
+    border: 2px solid white;
+    border-radius: 22px;
+    margin-top: 20px;
+}
+
+.remove::before {
+ content: "";
+ position: absolute;
+ width: 10px;
+ height: 2px;
+ background: white;
+ border-radius: 5px;
+ top: 8px;
+ left: 4px
+} 
+
+
+#accessBody{
+    display:grid;
+    grid-template-columns: 250px 300px;
+    grid-column-gap: 30px;
+}
+
+
+.add {
+    background-color: transparent;
+    box-sizing: border-box;
+    width: 22px;
+    height: 22px;
+    border: 2px solid white;
+    transform: scale(var(--ggs,1));
+    border-radius: 22px;
+    margin-top: 20px;
+}
+.add::after,
+.add::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    background: white;
+    border-radius: 5px;
+    top: 8px;
+    left: 4px
+}
+.add::after {
+    width: 2px;
+    height: 10px;
+    top: 4px;
+    left: 8px
+}
+
+
+
+#selectTable{
+    border-radius: 4px;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 17px;
+	letter-spacing: 0em;
+	text-align: left;
+	width: 206px;
+	height: 35px;
+	background: rgba(238, 240, 242, 1);
+	color: rgba(0, 59, 86, 1);
+    margin-left: 15px;
+    position: relative;
+    top: 5px;
+}
+
+#access{
+    margin-top: 20px;
+}
+
+.input1{
+    border-radius: 4px;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 17px;
+	letter-spacing: 0em;
+	text-align: left;
+	width: 180px;
+	height: 35px;
+	background: rgba(238, 240, 242, 1);
+	color: rgba(0, 59, 86, 1);
+	margin-top: 15px;
+}
+
+
+.inputU{
+	border-radius: 4px;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 17px;
+	letter-spacing: 0em;
+	text-align: left;
+	width: 180px;
+	height: 35px;
+	background: rgba(238, 240, 242, 1);
+	color: rgba(0, 59, 86, 1);
+	margin-top: 15px;
+	margin-left: 20px;
+}
+
+
+
+</style>

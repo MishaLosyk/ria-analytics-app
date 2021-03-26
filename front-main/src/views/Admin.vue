@@ -2,22 +2,46 @@
   <div id="admin">
         <div id="icon"> <div id="ria">RIA</div>
       <div id="analyt">analytics</div></div>
-      <div class="content"></div>
+      <div class="content">
+      <Users/>
+      </div>
+      <div>
+
+      </div>
+
+      
   </div>
 </template>
+<script>
+import Users from '@/components/admin/Users'
+export default {
+  name:'Admin',
+  components:{
+    Users,
+  },
+  data(){
+    return{
+    }
+  },
+  methods:{
+  }
 
+}
+</script>
 
 <style scoped>
 .content{
+text-align: left;
+
+}
+
+
+#admin {
+  font-family: 'Montserrat', sans-serif;
   background: linear-gradient(100.63deg, #003B56 -5.27%, #003147 72.85%);
   width: 100vw;
   height: 100vh;
-}
-
-#admin {
-  text-align: center;
-  font-family: 'Montserrat', sans-serif;
-  background: rgba(0, 47, 68, 1);
+  color: rgba(154, 187, 202, 1);
 }
 #icon{
   position: absolute;

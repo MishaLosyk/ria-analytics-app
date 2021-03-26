@@ -4,14 +4,29 @@
         <div id="ria">RIA</div>
         <div id="analyt">analytics</div>
     </div>
-      <div class="content"></div>
+      <div class="content">
+
+
+
+
+
+
+        
+      </div>
     </div>
 
 </template>
 
 
+
 <script>
 export default {
+    computed: {
+    test() {
+      return this.$store.state.name;
+      }
+    },
+  
     name:'User'
 }
 </script>
@@ -22,6 +37,7 @@ export default {
   background: linear-gradient(100.63deg, #003B56 -5.27%, #003147 72.85%);
   width: 100vw;
   height: 100vh;
+  color: aliceblue;
 }
 
 #user {
