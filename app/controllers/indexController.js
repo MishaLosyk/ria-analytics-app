@@ -36,6 +36,7 @@ async function login (ctx, next) {
         const response = user[1];
         response.tables = userSearchParams;
         ctx.body = response;
+        ctx.set('token', loginManager.signToken(user[0]));
         ctx.status = 200;
 
     } else {
@@ -47,12 +48,20 @@ async function login (ctx, next) {
     await next();
 }
 
-async function queryList (params) {
+async function addQuery (ctx, next) {
     
+    try {
+        let user = loginManager.decodeToken(ctx.request.header.token);
+    } catch (err) {if(err) throw new Error}
+    mysqlDb.addNewQuery(JSON.parse(ctx.request.body));
+    ctx.body = true;
+    ctx.status = 200;
+    await next();
+
 }
 
 
 
 
 
-module.exports = { mainPage, search, login };
+module.exports = { mainPage, search, login, addQuery};
