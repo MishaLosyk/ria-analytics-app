@@ -4,7 +4,6 @@ const
     ch = new ClickHouse(config.clickhouse)
 ;
 
-
 /**
  * 
  * @param {*} obj  
@@ -58,22 +57,37 @@ function queryUnion(body) {
     return query;
 }
 
+/**
+ * 
+ * @param {*} tables array of tables 
+ * @returns array of tables with their heads 
+ */
+async function getHeadsFromTables(tables) {
+    let tablesWithHeads = [];
+    for(let i in tables) {
+        let heads = await ch.querying(`SELECT * FROM ${tables[i].join('')} limit 1`, {format: 'JSONCompact'});
+        let tableItem = tables[i];
+        tableItem.push(heads.meta);
+        tablesWithHeads.push(tableItem);
+    }
+    return tablesWithHeads;
+}
 
 module.exports = {
     /**
      * Get all tables with their fields from DB
      * @return {Array}  [ [table, [titles]], [table2, [titles]] ]
      */
-    getSearchParams: async function getSearchParamsFromDb() {
-        const showTables = await ch.querying('show tables', {format: 'JSONCompact'});
-        let tables = showTables.data;
-        let tablesWithHeads = [];
-        for(let i in tables) {
-            let heads = await ch.querying(`SELECT * FROM ${tables[i].join('')} limit 1`, {format: 'JSONCompact'});
-            let tableItem = tables[i];
-            tableItem.push(heads.meta);
-            tablesWithHeads.push(tableItem);
+    getSearchParams: async function getSearchParamsFromDb(user) {
+        let tablesWithHeads;
+        if (user.role == 'admin') {
+            let showTables = await ch.querying('show tables', {format: 'JSONCompact'});
+            tablesWithHeads = await getHeadsFromTables(showTables.data);
+        } else {
+            let tables = user.tables.split(', ').map(val=>[val]);
+            tablesWithHeads = await getHeadsFromTables(tables);
         }
+        
         return tablesWithHeads;
     },
     /**
@@ -83,7 +97,7 @@ module.exports = {
      */
     getSearchResults: async function getSearchResultsFromDb(body) {
         try {   
-            // console.log(body); 
+            console.log(body); 
             let query = queryUnion(body); 
                 console.log(query);
                 const searchRequest = await ch.querying(query, {format: 'JSONCompact'});
@@ -96,5 +110,7 @@ module.exports = {
             }
         
     }
+
+
 
 }
