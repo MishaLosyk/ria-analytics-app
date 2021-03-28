@@ -1,30 +1,51 @@
 <template>
-  <div id="app" >
+  <div id="app">
     <div id="icon"> <div id="ria">RIA</div>
       <div id="analyt">analytics</div></div>
-      <MakeRequest v-bind:tempnames="tempnames" @changefield ='onChangefield' @unionall='onUnionAll' @union='onUnion' @submit="onSubmit" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:result="result" v-bind:temprequest="temprequest" v-bind:tempfield="tempfield"/>
-      <RecievedData v-bind:recieved="recieved"/>
+      <MakeRequest @getTable="onGetTable" v-bind:tempnames="tempnames" @changefield ='onChangefield' @unionall='onUnionAll' @union='onUnion' @submit="onSubmit" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:result="result" v-bind:temprequest="temprequest" v-bind:tempfield="tempfield"/>
+      <RecievedData @saver='onSaver' v-bind:recieved="recieved"/>
+      <SavedReq />
   </div>
 </template>
 
 <script>
 import MakeRequest from "@/components/constructor/MakeRequest";
 import RecievedData from "@/components/constructor/RecievedData";
+import SavedReq from "@/components/constructor/SavedReq";
 import axios from 'axios';
 export default {
   name: 'Constructor',
   components: {
     MakeRequest,
-    RecievedData
+    RecievedData,
+    SavedReq
+  },
+  computed: {
+    storageAuth() {
+      return this.$store.state.auth
+      },
+    storageUser_id() {
+  return this.$store.state.user_id
+      },
+storageIp() {
+    return this.$store.state.ip
+      },
+storageTable() {
+    return this.$store.state.tables
+      },
+    storageToken() {
+      return this.$store.state.token
+      },
+
   },
 created() {
   // GET request
-  axios.get('http://localhost:8081/')   //замени localhost/8081 http://109.108.247.29:8081/
-    .then(response => {this.fieldname = response.data; this.startfieldnames = response.data});
+//  axios.get(this.storageIp+':8081/')   //замени localhost/8081 http://109.108.247.29:8081/
+//   .then(response => {this.fieldname = response.data; this.startfieldnames = response.data});
+this.onGetTable()
 },
     data() { 
 	return{
-
     tempnames:[],
     request:{
       haveSubRequest: false,
@@ -50,10 +71,29 @@ startfieldnames:null,
 tempfield:[[]],
 fieldname:null,
 result:[],
+savereq:[],
 recieved:null,
   }
     },
 methods:{
+onGetTable(){
+this.fieldname = this.storageTable
+this.startfieldnames= this.storageTable
+},
+
+
+onSaver(name){
+  let a = {
+    user_id: this.storageUser_id,
+    query: this.savereq,
+    query_name: name,
+    token: storageToken
+  }
+console.log(a)
+axios.post(this.storageIp+":8081/add_q", a);
+
+
+},
 onChangefield(){
   console.log(this.request.from)
   this.tempfield[0].push(this.request.from,this.request.select)
@@ -137,14 +177,16 @@ onUnionAll(){
 
   console.log(this.result)
   const article = this.result;
-  const response = await axios.post("http://localhost:8081/search", article);  //замени localhost/search    http://109.108.247.29:8081/search
-  
+  const response = await axios.post(this.storageIp+":8081/search", article);  //замени localhost/search    http://109.108.247.29:8081/search
+  console.log(response)
+
     if(response.data.hasOwnProperty('error')){
       console.log("error")
       this.recieved = 'error'
     }
     else{
       this.recieved = response.data;
+      this.savereq = this.result
     }
     this.result = []
     this.temprequest={

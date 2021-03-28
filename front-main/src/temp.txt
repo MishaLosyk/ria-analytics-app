@@ -56,3 +56,36 @@ export default {
 
 }
 </script>
+
+
+
+
+
+             <tbody class="test">
+                <tr>
+                    <th>
+                        <button v-if="!edit" @click="change">Змінити</button>
+                        <button v-if="!edit">Видалити</button>
+                        <button v-if="edit" @click="save">Зберегти</button>
+                        </th>
+                    <th><input id="inputField" disabled v-model="local_user_id"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_email"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_password"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_name"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_surname"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_api_key"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_tables"></th>
+                </tr>
+            </tbody> 
+
+
+
+
+
+
+
+
+
+
+
+            

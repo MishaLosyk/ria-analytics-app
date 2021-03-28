@@ -1,11 +1,10 @@
 <template>
   <div id="global">
-
-
+	<div id="space">  
     <form>
 <div class="container">
 	<div style="margin-left: 36px">Данні</div>
-	    <select @change="tablechoose" v-model="fieldIndex" id="selectListTable">
+	    <select @click="getTable" @change="tablechoose" v-model="fieldIndex" id="selectListTable">
 		<option value="null" selected disabled hidden>Виберіть таблицю</option>
     <option v-for="(name,index) in fieldname" :value="index">{{name[0]}}</option>   
 	</select><br>
@@ -61,6 +60,7 @@
 </div>
 </div>
     </form>
+	</div>
   </div>
 
 </template>
@@ -94,6 +94,11 @@ limit:""
 }
   },
 methods:{
+	getTable(){
+		if(this.fieldname == null){
+			this.$emit('getTable')
+		}
+	},
 	onsubmitjoin(value){
 		console.log(value)
 		this.request.from = value
@@ -152,8 +157,8 @@ methods:{
 		this.isJoin = true
 		this.$emit('submit')
 		this.restore()
-		ifJoin = false
-		isJoin = false
+		this.ifJoin = false
+		this.isJoin = false
 },
 
 union(){
@@ -413,8 +418,11 @@ var that = this
 	color: #FFFFFF;
 	margin-bottom: 30px;
 }
-#newFieldButton:hover{
+#newFieldButton:hover:active{
 	box-shadow: 0 0 10px 0 #d8d9da inset, 0 0 10px 4px #247e18;
+}
+#newFieldButton:disabled{
+	background: rgba(121, 190, 0, 0.6);
 }
 
 #blockHr{
@@ -479,6 +487,10 @@ var that = this
 }
 .resetButton:hover{
 	box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+#space{
+	padding-top: 50px;
 }
 
 </style>

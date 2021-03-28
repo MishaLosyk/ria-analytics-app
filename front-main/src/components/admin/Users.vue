@@ -5,7 +5,6 @@
         <NewUser/>
         <UserList/>
     </div>
-
 </div>
 </template>
 
@@ -20,16 +19,15 @@ export default {
     }
 }
 </script>
-
-
-
 <style scoped>
+
 .block{
 position: absolute;
-padding-left: 300px;
-padding-top: 30px;
+left: 300px;
+margin-top: 60px;
 }
 #users{
 font-size: 50px;
+width: 500px;
 }
 </style>

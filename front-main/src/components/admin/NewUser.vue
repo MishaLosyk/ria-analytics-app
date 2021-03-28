@@ -6,12 +6,17 @@
             <input class="inputU" type="text" placeholder="Пароль" v-model="pass">
             <input class="inputU" type="text" placeholder="Ім'я" v-model="name">
             <input class="inputU" type="text" placeholder="Прізвище" v-model="surname">
+                        <select id="selectRole" v-model="role">
+                <option selected disabled hidden value="">Роль</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+            </select>
         </div>
-        <div id="access">Доступ</div>
+        <div id="access">Доступ до таблиць</div>
         <div id="accessBody">
         <div>
         <button @click="addTable" :disabled="selectTable == ''" class="add"></button>
-        <select v-model="selectTable" id="selectTable">
+        <select v-model="selectTable" id="selectTable" >
             <option selected hidden disabled value="">Виберіть таблицю</option>
             <option v-for="table of temptables" :key="table"  :value="table">{{table}}</option>
         </select>
@@ -23,15 +28,25 @@
             <option selected hidden disabled value="">Виберіть таблицю</option>
             <option v-for="tabl of chosenTables" :key="tabl"  :value="tabl">{{tabl}}</option>
             </select>
-            </div></div>
+            </div>
+            </div>
         </div>
-        <button @click="submitNewUser" :disabled="login == '' || pass == '' || name == '' || surname == '' || chosenTables.length == 0"  id ='addUserButton'>Додати</button>
+        <button @click="submitNewUser" :disabled="login == '' || pass == '' || name == '' || surname == '' || chosenTables.length == 0 || role == ''"  id ='addUserButton'>Додати</button>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
+      computed: {
+    storageToken() {
+      return this.$store.state.token
+      },
+    storageIp() {
+    return this.$store.state.ip
+      },
+    },
     name:"NewUser",
     data(){
         return{
@@ -44,6 +59,7 @@ export default {
             pass:'',
             name:'',
             surname:'',
+            role:'',
 
         }
     },
@@ -67,19 +83,22 @@ export default {
                     password: this.pass,
                     name: this.name,
                     surname: this.surname,
-                    tables: this.chosenTables.toString()    
+                    tables: this.chosenTables.toString(),
+                    role: this.role,
+                    token: this.storageToken
                     }
             console.log(a)
-            let responce = {
-                            user_id: 'user_id',
-                            email : 'email',
-                            password: 'password',
-                            name: 'name',
-                            surname: 'surname',
-                            tables: 'tables',
-                            api_key: 'api_key'     
-                            }
-            alert('Create new user with id '+ responce.user_id)
+            const responce = axios.post(this.storageIp+":8081/admin/add_user", a);
+            // let responce = {
+            //                 user_id: 'user_id',
+            //                 email : 'email',
+            //                 password: 'password',
+            //                 name: 'name',
+            //                 surname: 'surname',
+            //                 tables: 'tables',
+            //                 api_key: 'api_key'     
+            //                 }
+            alert('Create new user with id '+ responce.data.user_id)
         }
 }
 }
@@ -104,6 +123,12 @@ export default {
 #addUserButton:hover:active{
 	box-shadow: 0 0 10px 0 #d8d9da inset, 0 0 10px 4px #247e18;
 }
+#addUserButton:disabled{
+	background: rgba(121, 190, 0, 0.6);
+}
+
+
+
 #remName{
     display: inline;
     position: relative;
@@ -168,7 +193,21 @@ export default {
     left: 8px
 }
 
-
+#selectRole{
+    border-radius: 4px;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 17px;
+	letter-spacing: 0em;
+	text-align: left;
+	width: 69px;
+	height: 35px;
+	background: rgba(238, 240, 242, 1);
+	color: rgba(0, 59, 86, 1);
+    margin-left: 15px;
+    position: relative; 
+}
 
 #selectTable{
     border-radius: 4px;
