@@ -75,7 +75,7 @@ methods:{
                             },
                             
                             ]
-            this.queryList = responce
+            this.queryList = responce.data
         }
         this.showlist = !this.showlist
     },
