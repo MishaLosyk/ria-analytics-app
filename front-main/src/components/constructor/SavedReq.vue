@@ -8,7 +8,7 @@
            </div>
             <button class="close" v-if="showlist" @click="Menu"></button>
             <button class="submit" v-if="showlist" @click="submit">Виповнити</button>
-           <div v-if="!showlist"><button id="starbutton" @click="Menu">☆</button></div>
+           <div v-if="!showlist"><button id="starbutton" :disabled='!storageAuth' @click="Menu">☆</button></div>
        
        
        
@@ -16,6 +16,7 @@
 </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
 name:"SavedReq",
 computed:{
