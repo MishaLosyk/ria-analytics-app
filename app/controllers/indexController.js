@@ -3,7 +3,7 @@ const
     mysqlDb = require('../managers/mysqlDbManager'),
     loginManager = require('../managers/loginManager'),
     userObject = {
-        email: 'example@email.com',
+        user_id: 2,
         role: 'user'
     };
 
@@ -21,6 +21,8 @@ async function mainPage (ctx, next) {
  */
 async function search (ctx, next) {
     let response = await clickhouseDb.getSearchResults(ctx.request.body);
+    // mysqlDb.addLog(ctx.request.body);
+    // console.log('req is.. ', ctx.request.body);
     ctx.body = response;
     ctx.status = 200;
     await next();
@@ -43,25 +45,114 @@ async function login (ctx, next) {
         ctx.body = 'Логін або пароль не співпадають';
         ctx.status = 401
     }
-    
-    // let response = user ? loginManager.signToken(user[0]) : 'Логін або пароль не співпадають';
     await next();
 }
 
 async function addQuery (ctx, next) {
-    
-    try {
-        let user = loginManager.decodeToken(ctx.request.header.token);
-    } catch (err) {if(err) throw new Error}
-    mysqlDb.addNewQuery(JSON.parse(ctx.request.body));
-    ctx.body = true;
-    ctx.status = 200;
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    const user = ctx.request.body;
+    if(userToken.role == 'admin' || userToken.role == 'user' && userToken.user_id == user.user_id) {
+        const response = mysqlDb.addNewQuery(user);
+        ctx.status = response ? 200 : 400;
+    } else {
+        ctx.status = 400;
+    }
+    await next();
+}
+
+
+async function queryList (ctx, next) {
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    const user = ctx.request.body;
+    if(userToken.role == 'admin' || userToken.role == 'user' && userToken.user_id == user.user_id){
+        const response = await mysqlDb.getQueryList(user.user_id);
+        ctx.body = response;
+        ctx.status = 200;
+    } else { ctx.status = 400 }
     await next();
 
 }
 
 
 
+async function share (ctx, next) {
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    const body = ctx.request.body;
+    isValid = await mysqlDb.validateUser(userToken.user_id, 'query_id', body.query_id, 'queries');
+    
+    if(userToken.role == 'admin' || isValid) {
+        const response = await mysqlDb.shareQuery(body);
+        ctx.status = response ? 200 : 400;
+    } else { ctx.status = 400 }
+    await next();
+}
 
 
-module.exports = { mainPage, search, login, addQuery};
+async function removeQuery (ctx, next) {
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    isValid = await mysqlDb.validateUser(userToken.user_id, 'query_id', ctx.params.id, 'queries');
+    if(userToken.role == 'admin' || isValid) {
+        await mysqlDb.removeQueryId(ctx.params.id);
+        ctx.status = 200;
+    } else { ctx.status = 400}
+    await next();
+}
+
+async function addUser(ctx, next) {
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    if(userToken.role == 'admin') {
+        const body = ctx.request.body;
+        const response = await mysqlDb.addUser(body);
+        ctx.body = response;
+    } else { ctx.status = 400 }
+}
+
+async function removeUser (ctx, next) {
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    if(userToken.role == 'admin') {
+        const response = await mysqlDb.removeUser(ctx.params.id);
+        ctx.status = response ? 200 : 400;
+    } else { ctx.status = 400 }
+    await next();
+}
+
+async function updateUser (ctx, next) {
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    if(userToken.role == 'admin') {
+        const response = await mysqlDb.updateUser(ctx.request.body);
+        ctx.body = response;
+        ctx.status = 200;
+    } else { ctx.status = 400 }
+    await next();
+}
+
+
+async function users (ctx, next) {
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    if(userToken.role == 'admin') {
+        const body = ctx.request.body;
+        const response = await mysqlDb.usersList(body);
+        ctx.body = response;
+    } else { ctx.status = 400 }
+    await next();
+}
+
+async function logs (ctx, next) {
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    if(userToken.role == 'admin') {
+        const response = await mysqlDb.getLogs(ctx.request.body);
+        ctx.body = response;
+        ctx.status = 200;
+    } else { ctx.status = 400 }
+    await next();
+}
+
+async function test(ctx, next) {
+    let db = await mysqlDb.test();
+    // ctx.body = loginManager.signToken(userObject);
+    ctx.body = db;
+}
+
+
+
+module.exports = { mainPage, search, login, addQuery, queryList, share, test, removeQuery, users, addUser, removeUser, updateUser, logs};
