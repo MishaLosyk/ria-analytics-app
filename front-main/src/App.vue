@@ -152,8 +152,9 @@ export default {
               },
         headers:{token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJyb2xlIjoidXNlciIsImlhdCI6MTYxNjkzMDE4MH0.Xzm136kuqCcA9NnPAektGoSY-axVdgqqYpV1HMpfOPE'}
       }
-      this.$store.commit('LOGIN', responce);
-      if(responce.data.role == 'admin'){
+      if(responce.data.auth){this.$store.commit('LOGIN', responce);}
+      if(!responce.data.auth){alert("Неправильний пароль або email")}
+      if(responce.data.role == 'admin' && responce.data.auth){
         this.$router.push('admin')
       }
     }
