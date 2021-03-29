@@ -39,6 +39,7 @@ async function login (ctx, next) {
     if(user) {
         const userSearchParams = user[1].tables.length > 0 ? await clickhouseDb.getSearchParams(user[1]) : '';
         const response = user[1];
+        response.tables = userSearchParams;
         const token = {token: loginManager.signToken(user[0])}
         ctx.body = Object.assign(response,token)
         //ctx.body = response;
