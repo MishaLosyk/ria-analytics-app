@@ -1,0 +1,91 @@
+user
+<template>
+    <div id="user">
+    <div id="icon"> 
+        <div id="ria">RIA</div>
+        <div id="analyt">analytics</div>
+    </div>
+      <div class="content">{{ test }}</div>
+    </div>
+
+</template>
+
+
+
+<script>
+export default {
+    computed: {
+    test() {
+      return this.$store.state.name;
+      }
+    },
+  
+    name:'User'
+}
+</script>
+
+
+
+admin
+<template>
+  <div id="admin">
+        <div id="icon"> <div id="ria">RIA</div>
+      <div id="analyt">analytics</div></div>
+      <div class="content">
+        <input v-model="input" type="text">
+        <button @click.prevent="test">test</button>
+      </div>
+      
+  </div>
+</template>
+<script>
+export default {
+  name:'Admin',
+  data(){
+    return{
+      input:''
+    }
+  },
+  methods:{
+    test(){
+      console.log(this.input)
+      this.$store.commit('SET_NAME', this.input);
+      this.input = ''
+    }
+  }
+
+}
+</script>
+
+
+
+
+
+             <tbody class="test">
+                <tr>
+                    <th>
+                        <button v-if="!edit" @click="change">Змінити</button>
+                        <button v-if="!edit">Видалити</button>
+                        <button v-if="edit" @click="save">Зберегти</button>
+                        </th>
+                    <th><input id="inputField" disabled v-model="local_user_id"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_email"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_password"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_name"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_surname"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_api_key"></th>
+                    <th><input id="inputField" :disabled='!edit' v-model="local_tables"></th>
+                </tr>
+            </tbody> 
+
+
+
+
+
+
+
+
+
+
+
+            
