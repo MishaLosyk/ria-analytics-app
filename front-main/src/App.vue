@@ -2,7 +2,7 @@
   <div id="app">
     <div id="nav" v-if="storageAuth">
       <router-link style="margin-right:10px" to="/">Конструктор</router-link> 
-      <router-link style="margin-right:10px" to="/admin"  v-if="storageRole == 'admin'">Адмін панель</router-link>
+      <router-link style="margin-right:10px" to="/admin" v-if="storageRole == 'admin'">Адмін панель</router-link>
       <router-link style="margin-right:10px" to="/user">Кабінет користувача</router-link>
     </div>
     <div id="auth" v-if="!storageAuth">

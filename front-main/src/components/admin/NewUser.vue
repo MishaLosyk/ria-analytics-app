@@ -50,8 +50,8 @@ export default {
     name:"NewUser",
     data(){
         return{
-            tables:['slon.facts','slon.r_tags_v2','mviews.calltracking'],
-            temptables:['slon.facts','slon.r_tags_v2','mviews.calltracking'],
+            tables:['slon_facts','slon_r_tags_v2','mviews_calltracking'],
+            temptables:['slon_facts','slon_r_tags_v2','mviews_calltracking'],
             selectTable:'',
             chosenTables:[],
             delTable:'',
@@ -98,6 +98,13 @@ export default {
             //                 api_key: 'api_key'     
             //                 }
             alert('Create new user with id '+ responce.data.user_id)
+            this.login = ''
+            this.pass = ''
+            this.name = ''
+            this.surname = ''
+            this.chosenTables = ''
+            this.role = ''
+            this.temptables = this.tables
         }
 }
 }

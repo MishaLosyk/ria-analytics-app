@@ -7,7 +7,7 @@
            </select>
            </div>
             <button class="close" v-if="showlist" @click="Menu"></button>
-            <button class="submit" v-if="showlist" @click="runSave">Виповнити</button>
+            <button class="submit" v-if="showlist" @click="runSave">Виконати</button>
            <div v-if="!showlist"><button id="starbutton" :disabled='!storageAuth' @click="Menu">☆</button></div>
        
        
@@ -37,7 +37,7 @@ data(){
     return{
         showlist:false,
         queryList:[],
-        qur:''
+        qur:[]
     }
 },
 methods:{
@@ -52,8 +52,7 @@ methods:{
         this.showlist = !this.showlist
     },
     runSave(){
-        let a = this.qur
-       console.log(a)
+        let a = JSON.parse(this.qur)
         this.$emit('runSave', a)
     },
 }
