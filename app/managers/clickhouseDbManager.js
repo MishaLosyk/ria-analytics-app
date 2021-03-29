@@ -97,7 +97,7 @@ module.exports = {
      */
     getSearchResults: async function getSearchResultsFromDb(body) {
         try {   
-            console.log(body); 
+            console.log('body... ', body); 
             let query = queryUnion(body); 
                 console.log(query);
                 const searchRequest = await ch.querying(query, {format: 'JSONCompact'});

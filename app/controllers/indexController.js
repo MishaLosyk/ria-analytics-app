@@ -20,11 +20,14 @@ async function mainPage (ctx, next) {
  * @example curl -XPOST "http://localhost:8081/search" -d '[{}]' -H 'Content-Type: application/json'
  */
 async function search (ctx, next) {
-    let response = await clickhouseDb.getSearchResults(ctx.request.body);
-    // mysqlDb.addLog(ctx.request.body);
-    // console.log('req is.. ', ctx.request.body);
-    ctx.body = response;
-    ctx.status = 200;
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    if (userToken.role == 'admin' || userToken.role == 'user') {
+        let response = await clickhouseDb.getSearchResults(ctx.request.body);
+        mysqlDb.addLog(userToken.user_id, ctx.request.body);
+        ctx.body = response;
+        ctx.status = 200;
+    } else { ctx.status = 400 }
+
     await next();
 
 }
@@ -150,7 +153,7 @@ async function logs (ctx, next) {
 async function test(ctx, next) {
     let db = await mysqlDb.test();
     // ctx.body = loginManager.signToken(userObject);
-    ctx.body = db;
+    ctx.body = db[0];
 }
 
 
