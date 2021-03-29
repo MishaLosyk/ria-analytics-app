@@ -3,12 +3,12 @@
         <div id="icon"> <div id="ria">RIA</div>
       <div id="analyt">analytics</div>
       </div>
-      <div id="nav" v-if="storageAuth">
+      <div id="nav" v-if="storageAuth && storageRole == 'admin'">
            <div id="text"><button id='navButton' @click="change" :disabled="active">Користувачі</button><br>
             <button @click="change" id='navButton' :disabled="!active">Логи</button>
             </div>
       </div>
-      <div class="content" v-if="storageAuth">
+      <div class="content" v-if="storageAuth && storageRole == 'admin'">
       <div v-if="active">
       <Users/>
       </div>
@@ -25,6 +25,9 @@ export default {
     computed: {
     storageAuth() {
       return this.$store.state.auth
+      },
+     storageRole() {
+      return this.$store.state.role
       },
   },
   name:'Admin',

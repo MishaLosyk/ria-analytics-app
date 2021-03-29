@@ -20,6 +20,7 @@ async function mainPage (ctx, next) {
     await next();
 }
 
+// app.use(allowedMethods());
 /**
  * @example curl -XPOST "http://localhost:8081/search" -d '[{}]' -H 'Content-Type: application/json'
  */
@@ -50,7 +51,6 @@ async function login (ctx, next) {
         //ctx.body = response;
         //ctx.set('token', loginManager.signToken(user[0]));
         ctx.status = 200;
-
     } else {
         ctx.body = 'Логін або пароль не співпадають';
         ctx.status = 401

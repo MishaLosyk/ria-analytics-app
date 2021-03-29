@@ -47,11 +47,22 @@ export default {
     return this.$store.state.ip
       },
     },
+    created(){
+        // GET request
+                axios.get(this.storageIp+':8081/', {headers: {token: this.storageToken}})
+  .then(response => {console.log(response)
+  const a = response.data 
+    for(let table of a){
+        this.tables.push(table[0])
+        this.temptables.push(table[0])
+    }}
+  );
+    },
     name:"NewUser",
     data(){
         return{
-            tables:['slon.facts','slon.r_tags_v2','mviews.calltracking'],
-            temptables:['slon.facts','slon.r_tags_v2','mviews.calltracking'],
+            tables:[],
+            temptables:[],
             selectTable:'',
             chosenTables:[],
             delTable:'',
@@ -98,6 +109,13 @@ export default {
             //                 api_key: 'api_key'     
             //                 }
             alert('Create new user with id '+ responce.data.user_id)
+            this.login = ''
+            this.pass = ''
+            this.name = ''
+            this.surname = ''
+            this.chosenTables = ''
+            this.role = ''
+            this.temptables = this.tables
         }
 }
 }

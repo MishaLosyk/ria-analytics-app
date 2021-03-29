@@ -83,9 +83,9 @@ module.exports = {
         if (user.role == 'admin') {
             let showTables = await ch.querying('show tables', {format: 'JSONCompact'});
             tablesWithHeads = await getHeadsFromTables(showTables.data);
-        } else {
+        } else {         
             let tables = user.tables.split(',').map(val=>[val]);
-            tablesWithHeads = await getHeadsFromTables(tables);
+            tablesWithHeads = await getHeadsFromTables(tables); 
         }
         
         return tablesWithHeads;
