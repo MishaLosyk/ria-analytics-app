@@ -47,11 +47,22 @@ export default {
     return this.$store.state.ip
       },
     },
+    created(){
+        // GET request
+                axios.get(this.storageIp+':8081/', {headers: {token: this.storageToken}})
+  .then(response => {console.log(response)
+  const a = response.data 
+    for(let table of a){
+        this.tables.push(table[0])
+        this.temptables.push(table[0])
+    }}
+  );
+    },
     name:"NewUser",
     data(){
         return{
-            tables:['slon_facts','slon_r_tags_v2','mviews_calltracking'],
-            temptables:['slon_facts','slon_r_tags_v2','mviews_calltracking'],
+            tables:[],
+            temptables:[],
             selectTable:'',
             chosenTables:[],
             delTable:'',
