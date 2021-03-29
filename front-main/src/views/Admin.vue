@@ -29,6 +29,9 @@ export default {
      storageRole() {
       return this.$store.state.role
       },
+      storageRole(){
+      return this.$store.state.role
+    },
   },
   created(){
     if(this.storageRole != 'admin'){

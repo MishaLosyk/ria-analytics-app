@@ -44,6 +44,9 @@ export default {
     },
     created () {
       this.getQueryList();
+      if(this.storageRole != 'user' && this.storageRole != 'admin'){
+      this.$router.push('/')
+    }
     },
     computed: {
     storageAuth() {
@@ -58,6 +61,9 @@ export default {
         storageToken() {
       return this.$store.state.token
       },
+      storageRole(){
+      return this.$store.state.role
+    },
     },
     methods: {
        async getQueryList () {
