@@ -16,7 +16,7 @@
         <div id="accessBody">
         <div>
         <button @click="addTable" :disabled="selectTable == ''" class="add"></button>
-        <select v-model="selectTable" id="selectTable" >
+        <select v-model="selectTable" id="selectTable" size="3" >
             <option selected hidden disabled value="">Виберіть таблицю</option>
             <option v-for="table of temptables" :key="table"  :value="table">{{table}}</option>
         </select>
@@ -24,7 +24,7 @@
         <div id="remBlock">
             <div><button class="remove" @click="remTable" :disabled="delTable == ''"></button>
             <div id="remName">
-            <select v-model="delTable" id="selectTable">
+            <select v-model="delTable" id="selectTable" size="3">
             <option selected hidden disabled value="">Виберіть таблицю</option>
             <option v-for="tabl of chosenTables" :key="tabl"  :value="tabl">{{tabl}}</option>
             </select>
@@ -77,7 +77,7 @@ export default {
             this.chosenTables.splice(i,1)
             this.delTable = ''
         },
-        submitNewUser(){
+       async submitNewUser(){
             let a = {
                     email : this.login,
                     password: this.pass,
@@ -85,10 +85,9 @@ export default {
                     surname: this.surname,
                     tables: this.chosenTables.toString(),
                     role: this.role,
-                    token: this.storageToken
                     }
             console.log(a)
-            const responce = axios.post(this.storageIp+":8081/admin/add_user", a);
+            const responce = await axios.post(this.storageIp+":8081/admin/add_user", a,{headers: {token: this.storageToken}});
             // let responce = {
             //                 user_id: 'user_id',
             //                 email : 'email',
@@ -218,7 +217,7 @@ export default {
 	letter-spacing: 0em;
 	text-align: left;
 	width: 206px;
-	height: 35px;
+	height: 69px;
 	background: rgba(238, 240, 242, 1);
 	color: rgba(0, 59, 86, 1);
     margin-left: 15px;

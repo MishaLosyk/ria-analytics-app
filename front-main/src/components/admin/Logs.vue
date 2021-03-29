@@ -1,9 +1,9 @@
 <template>
     <div id="body">
         <div id="Logs">Логи</div>
-        <div><input type="date" id="inputDate" v-model="fromDate"> - <input type="date" id="inputDate1" v-model="toDate"><br>
+        <div><input type="date" id="inputDate" v-model="fromDate"><br>
             <input id="check" type="checkbox" v-model="check">Користувач<input class="input1" type="text" placeholder="Ід користувача" v-model="inp"> <br>
-        <button id="searchButton" @click="search" :disabled="fromDate == '' || toDate == '' || check && inp ==''">Search</button>
+        <button id="searchButton" @click="search" :disabled="fromDate == ''  || check && inp ==''">Search</button>
         </div>
         <div id="result">
             <ul id="list">
@@ -40,79 +40,24 @@ export default {
         return{
             logs:[],
             fromDate:"",
-            toDate:"",
             login:"",
             check:false,
             inp:''
         }
     },
     methods:{
-        search(){
+       async search(){
             let a = {
                     select: '*',
-                    where: "date>="+this.fromDate + ' AND ' + 'date<='  + this.toDate,
-                    token: this.storageToken
+                    where: "date>="+this.fromDate
                     }
             if(this.check){
                 a.where = a.where + ' AND ' + "user_id" + this.inp
             }
             console.log(a)
-            const responce = axios.post(this.storageIp+":8081/admin/logs", a);
-
-
+            const responce = await axios.post(this.storageIp+":8081/admin/logs/", a,{headers: {token: this.storageToken}});
+           
             this.logs = responce.data
-
-            // let responce = [    {
-            //                     log_id: '1',
-            //                     user_id: '7',
-            //                     date: '2008-10-23 10:37:22',
-            //                     query: 'sql query',
-            //                     },
-            //                     {
-            //                     log_id: '2',
-            //                     user_id: '13',
-            //                     date: '2008-10-23 10:37:22',
-            //                     query: 'sql query',
-            //                     },
-            //                     {
-            //                     log_id: '3',
-            //                     user_id: '13',
-            //                     date: '2008-10-23 10:37:22',
-            //                     query: 'sql query',
-            //                     },
-            //                     {
-            //                     log_id: '4',
-            //                     user_id: '13',
-            //                     date: '2008-10-23 10:37:22',
-            //                     query: 'sql query',
-            //                     },
-            //                     {
-            //                     log_id: '5',
-            //                     user_id: '69',
-            //                     date: '2008-10-23 10:37:22',
-            //                     query: 'sql query',
-            //                     },
-            //                     {
-            //                     log_id: '6',
-            //                     user_id: '69',
-            //                     date: '2008-10-23 10:37:22',
-            //                     query: 'sql query',
-            //                     },
-            //                     {
-            //                     log_id: '7',
-            //                     user_id: '69',
-            //                     date: '2008-10-23 10:37:22',
-            //                     query: 'sql query',
-            //                     },
-            //                     {
-            //                     log_id: '8',
-            //                     user_id: '44',
-            //                     date: '2008-10-23 10:37:22',
-            //                     query: 'sql query',
-            //                     },
-                                
-            //                 ]
-
             
         }
     }

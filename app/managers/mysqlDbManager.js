@@ -34,7 +34,8 @@ module.exports = {
                 user_id:    b[0][0].user_id,
                 role:       b[0][0].role,
                 name:       b[0][0].name,
-                tables:     b[0][0].tables
+                tables:     b[0][0].tables,
+                auth: true
             }
         ];
         } else {return false}
@@ -47,8 +48,9 @@ module.exports = {
         return result;
     },
 
-    getQueryList: async function getQueryListFromDb(userId){
-        const result = await connection.execute('SELECT * from queries where user_id = ?', [userId]);
+    getQueryList: async function getQueryListFromDb(userId){        
+        console.log('user ' ,userId);
+        const result = await connection.query('SELECT * from queries where user_id = ?', [userId]);
         return result[0];
     },
 
@@ -75,7 +77,11 @@ module.exports = {
     },
 
     usersList: async function getUsersListFromDb(body){
-        const result = await connection.query(`SELECT * from users where ${body.where}`);
+        let request = 'SELECT * from users'
+        if(body.where != null){
+        request = request + ' where ' + body.where
+        }
+        const result = await connection.query(request);
         return result[0];
     },
 
@@ -100,7 +106,6 @@ module.exports = {
 
     updateUser: async function updateUserFromDb(user){
             
-        console.log(user.email);
         await connection.execute('UPDATE users set email = ?, password = ?, name = ?, surname = ?, tables = ?, role = ?, api_key = ? where user_id = ?',
                                                     [user.email, user.password, user.name, user.surname, user.tables, user.role, user.api_key, user.user_id]);
         return true;
@@ -109,7 +114,9 @@ module.exports = {
     getLogs: async function getLogsFromDb(body){
             
         console.log(body.where);
+
         let result = await connection.query(`SELECT * from logs where ${body.where}`);
+        console.log(`SELECT * from logs where ${body.where}`);
         return result[0];
     },
 
@@ -118,8 +125,9 @@ module.exports = {
         await connection.execute('INSERT INTO logs(user_id, date, query) VALUES(?, ?, ?)', [userId, date, query]);
     },
     
-    test: async function getTestQuery(){
-        return await connection.query('select * from users');
+    test: async function getTestQuery(){  
+        return await connection.query('select * from logs');
+
     }
 
 }

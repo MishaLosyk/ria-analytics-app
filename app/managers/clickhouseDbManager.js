@@ -109,7 +109,9 @@ module.exports = {
                 return {error: 'No data matching this request'};
             }
         
-    }
+    },
+
+    queryUnion
 
 
 
