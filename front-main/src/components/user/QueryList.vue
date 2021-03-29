@@ -129,19 +129,20 @@ export default {
         this.currentQueryId = queryId;
       },
       async doShareQuery(queryId) {
-        const response = await axios.post(`${PATH}:${PORT}/share`,
+        const response = await axios.post(this.storageIp+':8081/share',
         {
-        query_id: query_id, 
+        query_id: queryId, 
         email: this.shareToEmail
-      }); 
+      }, {headers: {token: this.storageToken}});
       //   If(response.statusText !== "OK")
       // console.log(this.shareToEmail)
       },
       doRunQuery () {
         //Надіслати 
       },
-      async doDeleteQuery(){
-        const response = await axios.delete(this.storageIp+'8081:/query/' + this.currentQueryId, );
+      doDeleteQuery(){
+        console.log(this.storageIp+':8081/query/' + this.currentQueryId)
+        axios.delete(this.storageIp+':8081/query/' + this.currentQueryId, {headers: {token: this.storageToken}});
       }
     },
   
