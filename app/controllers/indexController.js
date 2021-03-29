@@ -16,6 +16,7 @@ async function mainPage (ctx, next) {
     await next();
 }
 
+// app.use(allowedMethods());
 /**
  * @example curl -XPOST "http://localhost:8081/search" -d '[{}]' -H 'Content-Type: application/json'
  */
@@ -35,17 +36,14 @@ async function search (ctx, next) {
 async function login (ctx, next) {
     const auth = loginManager.authDecode(ctx.request.header.authorization);
     const user = await mysqlDb.checkLogin(auth);
-
     if(user) {
         const userSearchParams = user[1].tables.length > 0 ? await clickhouseDb.getSearchParams(user[1]) : '';
         const response = user[1];
-        response.tables = userSearchParams;
         const token = {token: loginManager.signToken(user[0])}
         ctx.body = Object.assign(response,token)
         //ctx.body = response;
         //ctx.set('token', loginManager.signToken(user[0]));
         ctx.status = 200;
-
     } else {
         ctx.body = 'Логін або пароль не співпадають';
         ctx.status = 401

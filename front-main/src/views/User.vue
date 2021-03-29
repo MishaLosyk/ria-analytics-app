@@ -1,11 +1,15 @@
 <template>
-    <div id="user">
+  <div>
+   <div id="user">
     <div id="icon"> 
         <div id="ria">RIA</div>
         <div id="analyt">analytics</div>
     </div>
       <div class="content">
-
+      <p> Привіт, {{name}} {{surname}}</p>
+      <!-- user_id=   = {{user_id}}   -->
+      <!-- $route.params.user_id    -якщо в роутах props: false -->
+      <QueryList :query-list="queryArray"/>
 
 
 
@@ -15,19 +19,79 @@
       </div>
     </div>
 
+  </div>
+ 
 </template>
 
 
 
 <script>
+import axios from 'axios';
+import {PATH, PORT} from "@/config/config.js";
+
+import QueryList from "@/components/user/QueryList"
 export default {
+   name:'User',
+  //  props: ['user_id'],
+    components: {
+      QueryList
+    },
+    data() {
+      return {
+        name: "Jack",
+        surname: "Smith",
+        user_id: 1,
+        queryArray: [
+          {
+            query_id: 1,
+            query_name: 'name1',
+            query: "query1"
+          },
+          {
+            query_id: 2,
+            query_name: 'name2',
+            query: "query2"
+          },
+          {
+            query_id: 5,
+            query_name: 'name5',
+            query: "query5"
+          }
+        ]
+      }
+    },
+    created () {
+      this.getQueryList();
+    },
     computed: {
     test() {
       return this.$store.state.name;
       }
     },
+    methods: {
+       async getQueryList () {
+        // console.log("USer_id=" + this.user_id)
+        // const response = await axios.post(`${PATH}:${PORT}/query_list`, {user_id: this.user_id})   //! порт  і шлях до сервера
+          // .then(response => {
+            // if(response.statusText === "OK") {
+              // this.queryArray = response.data;
+            // }
+        //   console.log(response)
+        // })
+      // const response =  await axios.get(`http://localhost:8081/`)///,{user_id: this.user_id}) 
+      // .then(data=> console.log(data))
+      // this.queryArray = response.data
+        console.log(this.queryArray)
+
+       }
+    },
+    watch: {
+      $route(newValue, oldValue) {
+        console.log("зробити запит до бази для юзера за запитами")
+      }
+    },
   
-    name:'User'
+   
 }
 </script>
 

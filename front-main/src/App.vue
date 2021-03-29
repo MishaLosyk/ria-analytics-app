@@ -4,18 +4,21 @@
       <router-link style="margin-right:10px" to="/">Конструктор</router-link> 
       <router-link style="margin-right:10px" to="/admin" v-if="storageRole == 'admin'">Адмін панель</router-link>
       <router-link style="margin-right:10px" to="/user">Кабінет користувача</router-link>
+      <!-- <router-link style="margin-right:10px" :to="{name: 'user', params: {user_id:1}}">Кабінет користувача</router-link> -->
     </div>
     <div id="auth" v-if="!storageAuth">
       <button id="loginButton" @click="author" :disabled="email == ''|| pass == ''">Увійти</button>
       <input id="authinput" type="text" placeholder="Email" v-model="email">
       <input id="authinput" type="password" placeholder="Password" v-model="pass">
     </div>
+   
     <router-view />
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+
 export default {
   computed: {
     storageAuth() {
@@ -46,15 +49,16 @@ export default {
       }
       console.log(a)
       const responce = await axios.post(this.storageIp+":8081/login/", a,{
-    headers: {authorization: "Basic "+btoa(this.email+':' + this.pass)} 
-  });
-
+          headers: {authorization: "Basic "+btoa(this.email+':' + this.pass)} 
+       });
+console.log("responce")
       console.log(responce)
       if(responce.data.auth){this.$store.commit('LOGIN', responce);}
       if(!responce.data.auth){alert("Неправильний пароль або email")}
       if(responce.data.role == 'admin' && responce.data.auth){
         this.$router.push('admin')
       }
+     
     }
   }
 }
