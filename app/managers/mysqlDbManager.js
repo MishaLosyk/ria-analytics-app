@@ -119,7 +119,7 @@ module.exports = {
     },
     
     test: async function getTestQuery(){
-        return await connection.query('select * from logs');
+        return await connection.query('select * from users');
     }
 
 }

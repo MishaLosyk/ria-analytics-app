@@ -3,7 +3,7 @@ const
     mysqlDb = require('../managers/mysqlDbManager'),
     loginManager = require('../managers/loginManager'),
     userObject = {
-        user_id: 2,
+        user_id: 1,
         role: 'user'
     };
 
@@ -40,8 +40,8 @@ async function login (ctx, next) {
         const userSearchParams = user[1].tables.length > 0 ? await clickhouseDb.getSearchParams(user[1]) : '';
         const response = user[1];
         response.tables = userSearchParams;
-        ctx.body = response;
         ctx.set('token', loginManager.signToken(user[0]));
+        ctx.body = response;
         ctx.status = 200;
 
     } else {
@@ -65,8 +65,10 @@ async function addQuery (ctx, next) {
 
 
 async function queryList (ctx, next) {
+    console.log('dsd');
     const userToken = loginManager.decodeToken(ctx.request.header.token);
     const user = ctx.request.body;
+    console.log(user);
     if(userToken.role == 'admin' || userToken.role == 'user' && userToken.user_id == user.user_id){
         const response = await mysqlDb.getQueryList(user.user_id);
         ctx.body = response;
@@ -152,8 +154,8 @@ async function logs (ctx, next) {
 
 async function test(ctx, next) {
     let db = await mysqlDb.test();
-    // ctx.body = loginManager.signToken(userObject);
-    ctx.body = db[0];
+    ctx.body = loginManager.signToken(userObject);
+    // ctx.body = db[0];
 }
 
 
