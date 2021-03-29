@@ -1,11 +1,15 @@
 <template>
-    <div id="user">
+  <div>
+   <div id="user">
     <div id="icon"> 
         <div id="ria">RIA</div>
         <div id="analyt">analytics</div>
     </div>
       <div class="content">
-
+      <p> Привіт, {{this.$store.state.name}}</p>
+      <!-- user_id=   = {{user_id}}   -->
+      <!-- $route.params.user_id    -якщо в роутах props: false -->
+      <QueryList :query-list="queryArray"/>
 
 
 
@@ -15,19 +19,67 @@
       </div>
     </div>
 
+  </div>
+ 
 </template>
 
 
 
 <script>
+import axios from 'axios';
+import QueryList from "@/components/user/QueryList"
 export default {
+   name:'User',
+  //  props: ['user_id'],
+    components: {
+      QueryList
+    },
+    data() {
+      return {
+        name: "Jack",
+        surname: "Smith",
+        user_id: 1,
+        queryArray: []
+      }
+    },
+    created () {
+      this.getQueryList();
+    },
     computed: {
-    test() {
-      return this.$store.state.name;
+    storageAuth() {
+      return this.$store.state.auth
+      },
+    storageIp() {
+    return this.$store.state.ip
+      },
+          storageUser_id() {
+  return this.$store.state.user_id
+    },
+        storageToken() {
+      return this.$store.state.token
+      },
+    },
+    methods: {
+       async getQueryList () {
+        console.log("User_id=" + this.storageUser_id)
+        const response = await axios.post(this.storageIp+":8081/query_list", {user_id: this.storageUser_id}, {headers: {token: this.storageToken}});   //! порт  і шлях до сервера
+            if(response.statusText === "OK") {
+              this.queryArray = response.data;
+            }
+          console.log(response)
+      // const response =  await axios.get(`http://localhost:8081/`)///,{user_id: this.user_id}) 
+      // .then(data=> console.log(data))
+      // this.queryArray = response.data
+      //   console.log(this.queryArray)
+       }
+    },
+    watch: {
+      $route(newValue, oldValue) {
+        console.log("зробити запит до бази для юзера за запитами")
       }
     },
   
-    name:'User'
+   
 }
 </script>
 

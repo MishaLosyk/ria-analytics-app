@@ -30,6 +30,11 @@ export default {
       return this.$store.state.role
       },
   },
+  created(){
+    if(this.storageRole != 'admin'){
+      this.$router.push('/')
+    }
+  },
   name:'Admin',
   components:{
     Users,
