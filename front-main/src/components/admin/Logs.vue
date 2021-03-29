@@ -52,7 +52,7 @@ export default {
                     where: "date>="+this.fromDate
                     }
             if(this.check){
-                a.where = a.where + ' AND ' + "user_id" + this.inp
+                a.where = a.where + ' AND ' + "user_id=" + this.inp
             }
             console.log(a)
             const responce = await axios.post(this.storageIp+":8081/admin/logs/", a,{headers: {token: this.storageToken}});

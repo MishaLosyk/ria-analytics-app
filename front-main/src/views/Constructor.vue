@@ -39,9 +39,7 @@ storageTable() {
 
   },
 created() {
-  // GET request
-//  axios.get(this.storageIp+':8081/')   //замени localhost/8081 http://109.108.247.29:8081/
-//   .then(response => {this.fieldname = response.data; this.startfieldnames = response.data});
+
 this.onGetTable()
 },
     data() { 
