@@ -7,7 +7,7 @@
            </select>
            </div>
             <button class="close" v-if="showlist" @click="Menu"></button>
-            <button class="submit" v-if="showlist" @click="submit">Виповнити</button>
+            <button class="submit" v-if="showlist" @click="runSave">Виповнити</button>
            <div v-if="!showlist"><button id="starbutton" :disabled='!storageAuth' @click="Menu">☆</button></div>
        
        
@@ -41,47 +41,20 @@ data(){
     }
 },
 methods:{
-    Menu(){
+  async  Menu(){
         if(!this.showlist){
             let a = {
                 user_id: this.storageUser_id,
-                token: this.storageToken
             }
-            const responce = axios.post(this.storageIp+":8081/query_list", a);
-            let tresponse = [{
-                			query_id: 'query_id',
-                            query_name: 'query_name',
-                            query: 'query1'
-                            },
-                            {
-                			query_id: 'query_id',
-                            query_name: 'query_name1',
-                            query: 'query2'
-                            },
-                            {
-                			query_id: 'query_id',
-                            query_name: 'query_name2',
-                            query: 'query3'
-                            },
-                            {
-                			query_id: 'query_id',
-                            query_name: 'query_name3',
-                            query: 'query4'
-                            },
-                            {
-                			query_id: 'query_id',
-                            query_name: 'query_name4',
-                            query: '[{query5}]'
-                            },
-                            
-                            ]
+            const responce = await axios.post(this.storageIp+":8081/query_list", a, {headers: {token: this.storageToken}});
             this.queryList = responce.data
         }
         this.showlist = !this.showlist
     },
-    submit(){
+    runSave(){
         let a = this.qur
-        console.log(a)
+       console.log(a)
+        this.$emit('runSave', a)
     },
 }
 }

@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
       computed: {
     storageToken() {
@@ -70,7 +71,7 @@ export default {
             this.edit = true
             this.save = true
         },
-        saveuser(){
+        async saveuser(){
             let a = {
                 user_id: this.local_user_id,
                 email : this.local_email,
@@ -79,10 +80,12 @@ export default {
                 surname: this.local_surname,
                 tables: this.local_tables,
                 api_key: this.local_api_key,
-                token: this.storageToken
+                token: this.storageToken,
+                role: this.local_role
             }
-            axios.put(this.storageIp+":8081/admin/update", a);
+            const respons = await axios.post(this.storageIp+":8081/admin/update/", a,{headers: {token: this.storageToken}});
             console.log(a)
+            console.log(respons)
             this.edit = false
             this.save = false
         },
@@ -91,8 +94,8 @@ export default {
             this.deleteb = true
         },
         delchange(){
-            console.log('localhost/admin/user_'+ this.local_user_id)
-            axios.delete(this.storageIp+":8081/admin/user_"+ this.local_user_id);
+            console.log('localhost/admin/user/'+ this.local_user_id)
+            axios.delete(this.storageIp+":8081/admin/user/"+ this.local_user_id, {headers: {token: this.storageToken}});
             this.confirm = false
             this.deleteb = false
             this.deleted = true

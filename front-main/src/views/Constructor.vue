@@ -4,7 +4,7 @@
       <div id="analyt">analytics</div></div>
       <MakeRequest @getTable="onGetTable" v-bind:tempnames="tempnames" @changefield ='onChangefield' @unionall='onUnionAll' @union='onUnion' @submit="onSubmit" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:result="result" v-bind:temprequest="temprequest" v-bind:tempfield="tempfield"/>
       <RecievedData @saver='onSaver' v-bind:recieved="recieved"/>
-      <SavedReq />
+      <SavedReq @runSave='onRunSave' />
   </div>
 </template>
 
@@ -74,8 +74,12 @@ result:[],
 savereq:[],
 recieved:null,
   }
-    },
+    }, 
 methods:{
+  async onRunSave(query){
+      const response = await axios.post(this.storageIp+":8081/search", query, {headers: {token: this.storageToken}});
+      this.recieved = response.data;
+  },
 onGetTable(){
 this.fieldname = this.storageTable
 this.startfieldnames= this.storageTable
@@ -87,10 +91,9 @@ onSaver(name){
     user_id: this.storageUser_id,
     query: this.savereq,
     query_name: name,
-    token: storageToken
   }
 console.log(a)
-axios.post(this.storageIp+":8081/add_q", a);
+axios.post(this.storageIp+":8081/add_q", a, {headers: {token: this.storageToken}});
 
 
 },
@@ -177,7 +180,7 @@ onUnionAll(){
 
   console.log(this.result)
   const article = this.result;
-  const response = await axios.post(this.storageIp+":8081/search", article);  //замени localhost/search    http://109.108.247.29:8081/search
+  const response = await axios.post(this.storageIp+":8081/search", article, {headers: {token: this.storageToken}});  //замени localhost/search    http://109.108.247.29:8081/search
   console.log(response)
 
     if(response.data.hasOwnProperty('error')){

@@ -72,17 +72,18 @@ export default {
         selectType(){
             this.field = this.fieldInput = ''
         },
-        search(){
+      async search(){
+          this.userlist = []
             let a = {
                  select: '*',
-                 where: '',
-                 token: this.storageToken
+                 where: null,
                 }
             if(this.radio == 'one'){
                 a.where = this.field + this.fieldInput
             }
             console.log(a)
-           const responce = axios.post(this.storageIp+":8081/admin/users", a);
+           const responce = await axios.post(this.storageIp+":8081/admin/users/", a,{headers: {token: this.storageToken}});
+           console.log(responce)
             this.userlist = responce.data
         }
     }

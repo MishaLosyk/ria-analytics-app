@@ -39,119 +39,17 @@ export default {
     }
   },
   methods:{
-    author(){
+    async author(){
       let a = {
         email: this.email,
         pass: this.pass
       }
       console.log(a)
-      const responce = axios.post(this.storageIp+":8081/login", a);
-      let testresponce = {
-        data:{                      
-              auth: true,
-              role: 'admin',
-              name:'name1',
-              surname:'surname1',
-              tables:[
-        [
-            "slon_facts",
-            [
-                {
-                    "name": "EventDate",
-                    "type": "Date"
-                },
-                {
-                    "name": "HourDate",
-                    "type": "UInt8"
-                },
-                {
-                    "name": "MinuteDate",
-                    "type": "UInt8"
-                },
-                {
-                    "name": "SecondDate",
-                    "type": "UInt8"
-                },
-                {
-                    "name": "web_id",
-                    "type": "UInt32"
-                },
-                {
-                    "name": "user_id",
-                    "type": "UInt32"
-                },
-                {
-                    "name": "project_id",
-                    "type": "UInt16"
-                },
-                {
-                    "name": "marka_id",
-                    "type": "Array(UInt32)"
-                },
-                {
-                    "name": "event_id",
-                    "type": "Array(UInt16)"
-                },
-                {
-                    "name": "owner_id",
-                    "type": "Array(UInt32)"
-                },
-                {
-                    "name": "proposal_id",
-                    "type": "Array(UInt32)"
-                },
-                {
-                    "name": "conversion_value",
-                    "type": "UInt16"
-                }
-            ]
-        ],
-        [
-            "mviews_calltracking",
-            [
-                {
-                    "name": "EventDate",
-                    "type": "Date"
-                },
-                {
-                    "name": "date_time",
-                    "type": "DateTime"
-                },
-                {
-                    "name": "web_id",
-                    "type": "UInt32"
-                },
-                {
-                    "name": "user_id",
-                    "type": "UInt32"
-                },
-                {
-                    "name": "event_id",
-                    "type": "Array(UInt16)"
-                },
-                {
-                    "name": "calltracking_product_id",
-                    "type": "Array(UInt8)"
-                },
-                {
-                    "name": "owner_id",
-                    "type": "Array(UInt32)"
-                },
-                {
-                    "name": "proposal_id",
-                    "type": "Array(UInt32)"
-                },
-                {
-                    "name": "call_status",
-                    "type": "UInt8"
-                }
-            ]
-        ]
-    ],
-              user_id: '6969',
-              },
-        headers:{token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJyb2xlIjoidXNlciIsImlhdCI6MTYxNjkzMDE4MH0.Xzm136kuqCcA9NnPAektGoSY-axVdgqqYpV1HMpfOPE'}
-      }
+      const responce = await axios.post(this.storageIp+":8081/login/", a,{
+    headers: {authorization: "Basic "+btoa(this.email+':' + this.pass)} 
+  });
+
+      console.log(responce)
       if(responce.data.auth){this.$store.commit('LOGIN', responce);}
       if(!responce.data.auth){alert("Неправильний пароль або email")}
       if(responce.data.role == 'admin' && responce.data.auth){

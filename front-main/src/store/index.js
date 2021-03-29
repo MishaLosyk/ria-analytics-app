@@ -19,7 +19,7 @@ export default new Vuex.Store({
       state.name = payload.data.name
       state.surname = payload.data.surname
       state.user_id = payload.data.user_id
-      state.token = payload.headers.token
+      state.token = payload.data.token
       state.role = payload.data.role
       state.auth = payload.data.auth
       state.tables = payload.data.tables

@@ -24,6 +24,7 @@ module.exports = {
     },
 
     authDecode: function (authHeader) {
+        //console.log(authHeader)
         let crypto = authHeader.split(' ')[1];
         let auth = new Buffer.from(crypto, 'base64').toString().split(':');
         return auth;

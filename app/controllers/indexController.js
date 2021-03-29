@@ -40,8 +40,10 @@ async function login (ctx, next) {
         const userSearchParams = user[1].tables.length > 0 ? await clickhouseDb.getSearchParams(user[1]) : '';
         const response = user[1];
         response.tables = userSearchParams;
-        ctx.body = response;
-        ctx.set('token', loginManager.signToken(user[0]));
+        const token = {token: loginManager.signToken(user[0])}
+        ctx.body = Object.assign(response,token)
+        //ctx.body = response;
+        //ctx.set('token', loginManager.signToken(user[0]));
         ctx.status = 200;
 
     } else {
