@@ -115,18 +115,39 @@ module.exports = {
             
         console.log(body.where);
 
-        let result = await connection.query(`SELECT * from logs where ${body.where}`);
+        const result = await connection.query(`SELECT * from logs where ${body.where}`);
         console.log(`SELECT * from logs where ${body.where}`);
         return result[0];
     },
 
     addLog: async function addLogToDB(userId, query){
-        let date = new Date();
+        const date = new Date();
         await connection.execute('INSERT INTO logs(user_id, date, query) VALUES(?, ?, ?)', [userId, date, query]);
     },
+
+    createApi: async function addApiToDB(userId, apiKey){
+
+        const result = await connection.execute('UPDATE users set api_key = ? where user_id = ?', [apiKey, userId]);
+        return result;
+    },
+
+    removeApi: async function removeApiFromDb(id){
+            const response = await connection.execute('UPDATE users set api_key = ? where user_id = ?', ['', id]);
+            return true;
+    },
     
+    checkApiKey: async function checkApiFromDb(apiKey){
+        const response = await connection.execute('select * from users where api_key = ?', [apiKey]);
+        return response[0].length ? true : false;
+    },
+
+    getQueryById: async function getQueryByIdFromDb(queryId){
+        const response = await connection.query('select * from queries where query_id = ?', [queryId]);
+        return response[0];
+    },
+
     test: async function getTestQuery(){  
-        return await connection.query('select * from logs');
+        return await connection.query('select * from queries');
 
     }
 

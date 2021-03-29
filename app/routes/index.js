@@ -1,6 +1,6 @@
 const Router = require('koa-router'),
       KoaBody = require('koa-body'),
-     {mainPage, search, login, addQuery, queryList, test, share, removeQuery, users, addUser, removeUser, updateUser, logs} = require('../controllers/indexController');
+     {mainPage, search, login, addQuery, queryList, test, share, removeQuery, users, addUser, removeUser, updateUser, logs, createApi, removeApi, getApi} = require('../controllers/indexController');
 const request = require('request');
 
 const router = new Router();
@@ -18,6 +18,9 @@ const router = new Router();
         .post('/admin/update/',     KoaBody(), updateUser)
         .post('/admin/logs/',       KoaBody(), logs)
         .delete('/admin/user/:id',  removeUser)
+        .delete('/api/:id',         removeApi)
+        .post('/api/',              KoaBody(), createApi)
+        .get('/api/',               getApi)
         .get('/test/',              test)
 
 

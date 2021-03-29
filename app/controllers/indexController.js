@@ -26,7 +26,6 @@ async function mainPage (ctx, next) {
  */
 async function search (ctx, next) {
     const userToken = loginManager.decodeToken(ctx.request.header.token);
-    console.log('herererer........', ctx.request.body);
     if (userToken.role == 'admin' || userToken.role == 'user') {
         let response = await clickhouseDb.getSearchResults(ctx.request.body);
         const stringQuery = await clickhouseDb.queryUnion(ctx.request.body);
@@ -162,6 +161,45 @@ async function logs (ctx, next) {
     await next();
 }
 
+async function createApi (ctx, next) {
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    if(userToken) {
+        const response = await mysqlDb.createApi(userToken.user_id, ctx.request.body.api_key);
+        if(response.length){
+            ctx.status = 200;
+        } else {ctx.status = 400}
+        
+    } else { ctx.status = 400 }
+    await next();
+}
+
+async function removeApi (ctx, next) {
+    const userToken = loginManager.decodeToken(ctx.request.header.token);
+    if(userToken) {
+        const response = await mysqlDb.removeApi(ctx.params.id);
+        ctx.status = response ? 200 : 400;
+    } else { ctx.status = 400 }
+    await next();
+}
+
+async function getApi(ctx, next) {
+    const url = ctx.request.query;
+    if(url.api_key && url.query_id){
+        
+        const checkApiKey = await mysqlDb.checkApiKey(url.api_key)
+        if(checkApiKey) {
+            const response = await mysqlDb.getQueryById(url.query_id);
+            if(response.length){
+                ctx.body = await clickhouseDb.getSearchResults(JSON.parse(response[0].query));
+            } else ctx.status = 400;
+        } else ctx.status = 400;
+
+
+    } else { ctx.status = 400 }
+    
+    
+}
+
 async function test(ctx, next) {
     let db = await mysqlDb.test();
     ctx.body = loginManager.signToken(userObject);
@@ -170,4 +208,4 @@ async function test(ctx, next) {
 
 
 
-module.exports = { mainPage, search, login, addQuery, queryList, share, test, removeQuery, users, addUser, removeUser, updateUser, logs};
+module.exports = { mainPage, search, login, addQuery, queryList, share, test, removeQuery, users, addUser, removeUser, updateUser, logs, createApi, removeApi, getApi};
