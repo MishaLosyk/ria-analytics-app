@@ -6,11 +6,16 @@
         <div id="analyt">analytics</div>
     </div>
       <div class="content">
-      <p> Привіт, {{name}} {{surname}}</p>
+      <p> Привіт, {{$store.state.name}}</p>
       <!-- user_id=   = {{user_id}}   -->
       <!-- $route.params.user_id    -якщо в роутах props: false -->
-      <QueryList :query-list="queryArray"/>
-
+      <QueryList 
+      :query-list="queryArray"
+      v-on:get-query-list="getQueryList"
+      ></QueryList>
+      <!-- fhdfh -->
+      <!-- <QueryResultTable :query-data-object=""> </QueryResultTable> -->
+    
 
 
 
@@ -27,62 +32,56 @@
 
 <script>
 import axios from 'axios';
-import {PATH, PORT} from "@/config/config.js";
-
 import QueryList from "@/components/user/QueryList"
+
 export default {
    name:'User',
   //  props: ['user_id'],
     components: {
-      QueryList
+      QueryList,
+    
     },
     data() {
       return {
         name: "Jack",
         surname: "Smith",
         user_id: 1,
-        queryArray: [
-          {
-            query_id: 1,
-            query_name: 'name1',
-            query: "query1"
-          },
-          {
-            query_id: 2,
-            query_name: 'name2',
-            query: "query2"
-          },
-          {
-            query_id: 5,
-            query_name: 'name5',
-            query: "query5"
-          }
-        ]
+        queryArray: []
       }
     },
     created () {
       this.getQueryList();
     },
     computed: {
-    test() {
-      return this.$store.state.name;
-      }
+    storageAuth() {
+      return this.$store.state.auth
+      },
+    storageIp() {
+    return this.$store.state.ip
+      },
+          storageUser_id() {
+  return this.$store.state.user_id
+    },
+        storageToken() {
+      return this.$store.state.token
+      },
     },
     methods: {
+      aaa (a) {
+        console.log("in upper comp" ,a)
+      },
        async getQueryList () {
-        // console.log("USer_id=" + this.user_id)
-        // const response = await axios.post(`${PATH}:${PORT}/query_list`, {user_id: this.user_id})   //! порт  і шлях до сервера
-          // .then(response => {
-            // if(response.statusText === "OK") {
-              // this.queryArray = response.data;
-            // }
-        //   console.log(response)
-        // })
+         console.log("in get query list")
+        console.log(this.$store.state.name + ' ' + this.$store.state.surname)
+        const response = await axios.post(this.storageIp+":8081/query_list", {user_id: this.storageUser_id}, {headers: {token: this.storageToken}});   //! порт  і шлях до сервера
+            if(response.statusText === "OK") {
+              this.queryArray = response.data;
+            }
+          console.log(response)
       // const response =  await axios.get(`http://localhost:8081/`)///,{user_id: this.user_id}) 
       // .then(data=> console.log(data))
       // this.queryArray = response.data
-        console.log(this.queryArray)
-
+      //   console.log(this.queryArray)
        }
     },
     watch: {
@@ -98,9 +97,10 @@ export default {
 
 <style scoped>
 .content{
-  background: linear-gradient(100.63deg, #003B56 -5.27%, #003147 72.85%);
+  background: rgba(0, 47, 68, 1);
+  /* linear-gradient(100.63deg, #003B56 -5.27%, #003147 72.85%); */
   width: 100vw;
-  height: 100vh;
+  height: 150px;
   color: aliceblue;
 }
 
