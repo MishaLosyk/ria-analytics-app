@@ -34,6 +34,7 @@ module.exports = {
                 user_id:    b[0][0].user_id,
                 role:       b[0][0].role,
                 name:       b[0][0].name,
+                api_key:    b[0][0].api_key,
                 tables:     b[0][0].tables,
                 auth: true
             }
