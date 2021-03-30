@@ -3,7 +3,7 @@
 	<div id="space">  
     <form>
 <div class="container">
-	<div style="margin-left: 36px">Данні</div>
+	<div style="margin-left: 36px">Дані</div>
 	    <select @click="getTable" @change="tablechoose" v-model="fieldIndex" id="selectListTable">
 		<option value="null" selected disabled hidden>Виберіть таблицю</option>
     <option v-for="(name,index) in fieldname" :value="index">{{name[0]}}</option>   
@@ -12,7 +12,7 @@
 </div>
 	<div class="container">
 	<DatasForView @onChange="onChangeField" v-bind:fieldIndex="fieldIndex" v-for="n of countDataField" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"></DatasForView>
-	<button id ="newFieldButton" :disabled="fieldIndex == 'null' " @click.prevent="addDataField">+ Добавити нове поле</button>
+	<button id ="newFieldButton" :disabled="fieldIndex == 'null' " @click.prevent="addDataField">+ Додати нове поле</button>
 	<hr id="blockHr">
 </div>
 
@@ -20,7 +20,7 @@
 <div class="container">
 	<div style="margin-left: 36px">З умовою</div>
 	<Where v-bind:fieldIndex="fieldIndex" v-for="n in countWhere" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"/>
-	<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addWhere">+ Добавити нове поле</button>
+	<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addWhere">+ Додати нове поле</button>
 	<hr id="blockHr">
 </div>
 <div class="containerSplit">
@@ -28,13 +28,13 @@
 		<div class="Rcontainer">
 		<div style="margin-left: 36px">Сортувати за</div>
 			<SortBy v-bind:fieldIndex="fieldIndex" v-for="n in countSortBy" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"/>
-			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addSortBy">+ Добавити нове поле</button>
+			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addSortBy">+ Додати нове поле</button>
 		</div>
 	</div>
 	<div class="Lcontainer">
 		<div style="margin-left: 36px">Групувати по</div>
 			<GroupBy v-bind:fieldIndex="fieldIndex" v-for="n in countGroupBy" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:tempnames="tempnames"/>
-			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addGroupBy">+ Добавити нове поле</button>
+			<button id ="newFieldButton" :disabled="fieldIndex == 'null'" @click.prevent="addGroupBy">+ Додати нове поле</button>
 		</div>
 </div>
 <div class="container" v-if="!isJoin">
@@ -56,7 +56,7 @@
 <input v-model="limit" v-if="!ifJoin"  placeholder="Ліміт" class="limit">
 <button @click.prevent="submit" :disabled="fieldIndex == 'null' || fromDate == ''|| toDate == ''|| tempnames.length == 0" class="submitButton"  v-if="!ifJoin" style="position:relative; bottom:10px;">Показати результат</button>
 <button v-if="ifJoin" @click.prevent="pressOk"  :disabled="fieldIndex == 'null'|| fromDate == ''|| toDate == '' || tempnames.length == 0 || joinvalue == '' "  class="submitButton">ОК</button>
-<button @click.prevent="restore"  class="resetButton"  name="reset">Ресет</button>
+<button @click.prevent="restore"  class="resetButton"  name="reset">Очистити</button>
 </div>
 </div>
     </form>
@@ -156,7 +156,7 @@ methods:{
 		}
 		this.isJoin = true
 		this.$emit('submit')
-		this.restore()
+		//this.restore()
 		this.ifJoin = false
 		this.isJoin = false
 },
