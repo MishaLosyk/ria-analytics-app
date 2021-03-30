@@ -55,8 +55,7 @@ export default {
   methods:{
      doLogOut() {
         this.$store.dispatch('logout');
-        if(!this.$router.currentRoute === '/')
-        this.$router.push('/');
+        if(this.$router.currentRoute !== '/') this.$router.push('/');
       },
     async author(){
       let a = {
@@ -71,7 +70,7 @@ export default {
       if(responce.data.role == 'admin' && responce.data.auth){
         this.$router.push('admin')
       } else {
-        if(!this.$router.currentRoute === '/')  this.$router.push('/')
+        if(this.$router.currentRoute !== '/') this.$router.push('/');
       }
      
     }
