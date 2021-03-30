@@ -15,7 +15,7 @@
                         </select>
                         </th>
                                         <th>
-                        <button id='query' v-if="!edit && !confirm">Збережені запити</button>
+                        <button id='query' v-if="!edit && !confirm" @click="savedRequest">Збережені запити</button>
                         <button id="change" v-if="!edit && !confirm" @click="change">Змінити</button>
                         <button id='del' v-if="!edit && !confirm" @click="conf">Видалити</button>
                         <button id='save' v-if="save" @click="saveuser">Зберегти</button>
@@ -99,7 +99,11 @@ export default {
             this.confirm = false
             this.deleteb = false
             this.deleted = true
+        },
+        savedRequest(){
+            this.$emit('savedRequest', this.local_user_id)
         }
+
     }
 }
 

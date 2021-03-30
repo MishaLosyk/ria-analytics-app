@@ -48,9 +48,8 @@ module.exports = {
         return result;
     },
 
-    getQueryList: async function getQueryListFromDb(userId){        
-        console.log('user ' ,userId);
-        const result = await connection.query('SELECT * from queries where user_id = ?', [userId]);
+    getQueryList: async function getQueryListFromDb(userId){
+        const result = await connection.execute('SELECT * from queries where user_id = ?', [userId]);
         return result[0];
     },
 
@@ -125,9 +124,8 @@ module.exports = {
         await connection.execute('INSERT INTO logs(user_id, date, query) VALUES(?, ?, ?)', [userId, date, query]);
     },
     
-    test: async function getTestQuery(){  
-        return await connection.query('select * from logs');
-
+    test: async function getTestQuery(){
+        return await connection.query('select * from users;');
     }
 
 }

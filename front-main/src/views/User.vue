@@ -6,6 +6,7 @@
         <div id="analyt">analytics</div>
     </div>
       <div class="content">
+        <div id="marg">
       <p> Привіт, {{this.$store.state.name}}</p>
       <!-- user_id=   = {{user_id}}   -->
       <!-- $route.params.user_id    -якщо в роутах props: false -->
@@ -15,7 +16,7 @@
 
 
 
-        
+        </div>
       </div>
     </div>
 
@@ -97,7 +98,10 @@ export default {
   height: 100vh;
   color: aliceblue;
 }
-
+#marg{
+  position: relative;
+  top: 100px;
+}
 #user {
   text-align: center;
   font-family: 'Montserrat', sans-serif;

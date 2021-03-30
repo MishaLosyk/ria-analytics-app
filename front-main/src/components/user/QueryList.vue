@@ -43,9 +43,6 @@
             <div class="query-value">
               <div class="query__controllers">
                 <button 
-                @click="doRunQuery" 
-                :disabled="isRunQueryBtnDisabled">Виконати</button>
-                <button 
                 class="query__delete-button" 
                 @click="doDeleteQuery"
                 :disabled="isRunQueryBtnDisabled">
@@ -153,12 +150,13 @@ export default {
 
 <style scoped>
 .sql-item-row:hover {
-   background-color: blue;
+   background-color: rgb(0, 0, 255,0.1);
    cursor: pointer;
 }
 td {
   width: 100px;
   border: 1px solid yellow;
+  border-radius: 4px;
 }
 /* td:hover {
   cursor: pointer;
@@ -192,7 +190,8 @@ td {
 }
 .query__delete-button {
   width: 35px;
-  color:red;
+  color:rgb(161, 9, 9);
+  background: transparent;
 }
 .share-query-block {
   border:1px solid white;
@@ -201,6 +200,15 @@ td {
 .share-input {
   width: 120px;
   font-size: 0.75rem;;
+  border-radius: 4px;
+	font-size: 12px;
+	font-style: normal;
+	line-height: 17px;
+	letter-spacing: 0em;
+	text-align: left;
+	height: 35px;
+	background: rgba(238, 240, 242, 1);
+	color: rgba(0, 59, 86, 1);
 }
 button {
   width: 100px;
@@ -216,7 +224,7 @@ button {
 }
 button:hover {
   cursor:pointer;
-  outline: rgb(0, 255, 234) solid 2px;
+  outline: rgb(0, 102, 255) solid 2px;
 }
 .block{
 position: absolute;

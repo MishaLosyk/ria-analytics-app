@@ -3,8 +3,8 @@ const
     mysqlDb = require('../managers/mysqlDbManager'),
     loginManager = require('../managers/loginManager'),
     userObject = {
-        user_id: 6,
-        role: 'admin'
+        user_id: 2,
+        role: 'user'
     };
 
 
@@ -12,25 +12,18 @@ const
 * @example curl -XGET "http://localhost:8081/"
 */
 async function mainPage (ctx, next) {
-    const userToken = loginManager.decodeToken(ctx.request.header.token);
-    if (userToken.role == 'admin'){
-        ctx.body = await clickhouseDb.getSearchParams({role: 'admin'});
-        ctx.status = 200;
-    } else { ctx.status = 400 }
+    ctx.body = await clickhouseDb.getSearchParams({role: 'admin'});
     await next();
 }
 
-// app.use(allowedMethods());
 /**
  * @example curl -XPOST "http://localhost:8081/search" -d '[{}]' -H 'Content-Type: application/json'
  */
 async function search (ctx, next) {
     const userToken = loginManager.decodeToken(ctx.request.header.token);
-    console.log('herererer........', ctx.request.body);
     if (userToken.role == 'admin' || userToken.role == 'user') {
         let response = await clickhouseDb.getSearchResults(ctx.request.body);
-        const stringQuery = await clickhouseDb.queryUnion(ctx.request.body);
-        mysqlDb.addLog(userToken.user_id, stringQuery);
+        mysqlDb.addLog(userToken.user_id, ctx.request.body);
         ctx.body = response;
         ctx.status = 200;
     } else { ctx.status = 400 }
@@ -42,15 +35,17 @@ async function search (ctx, next) {
 async function login (ctx, next) {
     const auth = loginManager.authDecode(ctx.request.header.authorization);
     const user = await mysqlDb.checkLogin(auth);
+
     if(user) {
-        const userSearchParams = await clickhouseDb.getSearchParams(user[1]);
+        const userSearchParams = user[1].tables.length > 0 ? await clickhouseDb.getSearchParams(user[1]) : '';
         const response = user[1];
         response.tables = userSearchParams;
         const token = {token: loginManager.signToken(user[0])}
-        ctx.body = Object.assign(response, token)
+        ctx.body = Object.assign(response,token)
         //ctx.body = response;
         //ctx.set('token', loginManager.signToken(user[0]));
         ctx.status = 200;
+
     } else {
         ctx.body = 'Логін або пароль не співпадають';
         ctx.status = 401
@@ -72,17 +67,12 @@ async function addQuery (ctx, next) {
 
 
 async function queryList (ctx, next) {
-    console.log(ctx.request.body);
     const userToken = loginManager.decodeToken(ctx.request.header.token);
     const user = ctx.request.body;
-    console.log(userToken);
     if(userToken.role == 'admin' || userToken.role == 'user' && userToken.user_id == user.user_id){
         const response = await mysqlDb.getQueryList(user.user_id);
-            ctx.body = response;
-            ctx.status = 200;
-        
-        
-        
+        ctx.body = response;
+        ctx.status = 200;
     } else { ctx.status = 400 }
     await next();
 
@@ -164,7 +154,7 @@ async function logs (ctx, next) {
 
 async function test(ctx, next) {
     let db = await mysqlDb.test();
-    ctx.body = loginManager.signToken(userObject);
+    // ctx.body = loginManager.signToken(userObject);
     ctx.body = db[0];
 }
 

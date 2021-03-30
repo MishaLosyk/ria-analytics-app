@@ -12,7 +12,7 @@ export default new Vuex.Store({
       role: '',
       auth:false, 
       tables:null,
-      ip: 'http://localhost', //http://109.108.247.29   http://localhost
+      ip: 'http://109.108.247.29', //http://109.108.247.29   http://localhost
     },
   mutations: {
     LOGIN: (state, payload) =>{

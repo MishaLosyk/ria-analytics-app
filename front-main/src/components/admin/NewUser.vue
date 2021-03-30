@@ -109,13 +109,15 @@ export default {
             //                 api_key: 'api_key'     
             //                 }
             alert('Create new user with id '+ responce.data.user_id)
+            this.delTable = ''
             this.login = ''
             this.pass = ''
             this.name = ''
             this.surname = ''
-            this.chosenTables = ''
+            this.chosenTables = []
             this.role = ''
             this.temptables = this.tables
+            this.$bus.$emit('newuser', 'Hi')
         }
 }
 }
