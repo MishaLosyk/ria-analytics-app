@@ -176,10 +176,12 @@ onUnionAll(){
       }
 
 
+  console.log("this.result")
   console.log(this.result)
   const article = this.result;
   const response = await axios.post(this.storageIp+":8081/search", article, {headers: {token: this.storageToken}});  //замени localhost/search    http://109.108.247.29:8081/search
   console.log(response)
+  console.log("response")
 
     if(response.data.hasOwnProperty('error')){
       console.log("error")

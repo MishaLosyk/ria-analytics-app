@@ -47,16 +47,15 @@ export default {
         email: this.email,
         pass: this.pass
       }
-      console.log(a)
       const responce = await axios.post(this.storageIp+":8081/login/", a,{
           headers: {authorization: "Basic "+btoa(this.email+':' + this.pass)} 
        });
-console.log("responce")
-      console.log(responce)
       if(responce.data.auth){this.$store.commit('LOGIN', responce);}
       if(!responce.data.auth){alert("Неправильний пароль або email")}
       if(responce.data.role == 'admin' && responce.data.auth){
         this.$router.push('admin')
+      } else {
+         this.$router.push('/')
       }
      
     }
