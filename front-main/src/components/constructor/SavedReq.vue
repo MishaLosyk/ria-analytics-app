@@ -40,6 +40,10 @@ data(){
         qur:[]
     }
 },
+    created() {
+    this.$bus.$on('SaveNewReq', (args) => {
+        this.Menu()
+    })},
 methods:{
   async  Menu(){
         if(!this.showlist){

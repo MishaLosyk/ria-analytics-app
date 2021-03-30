@@ -1,9 +1,7 @@
 <template>
             
         <li v-if="!del"><details><summary><pre style="display:inline;">ID:{{qur_id}}    Назва запиту: {{query_name}}</pre>
-        
         </summary><div>{{query}}</div>
-        
         <button id="deleteButton" @click="dele">Видалити</button>
         </details></li>
 
@@ -44,7 +42,6 @@ export default {
       }  
 }
 }
-
 </script>
 
 
