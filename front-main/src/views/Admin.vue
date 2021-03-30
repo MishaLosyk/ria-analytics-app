@@ -35,6 +35,11 @@ export default {
     Users,
     Logs,
   },
+  created(){
+    if(this.storageRole != 'admin'){
+      this.$router.push('/')
+    }
+  },
   data(){
     return{
       active:true
