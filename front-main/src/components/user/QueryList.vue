@@ -47,6 +47,12 @@
                 :disabled="isRunQueryBtnDisabled">
                 <i class="fas fa-trash-alt"></i>
               </button> 
+              <button 
+                class="query__rerolad-data" 
+                type="button"
+                @click="()=> $emit('get-query-list')">
+                <i class="fas fa-sync-alt"></i>
+              </button>
               
               </div>
               
@@ -68,7 +74,7 @@
               <button 
               @click="() => {doShareQuery(currentQueryId)}" 
               :disabled="shareBtnDisabled">
-              =>
+              <i class="fas fa-share"></i>
               <!-- <img src="@/assets/paper-plane-regular.svg" alt="" srcset=""> -->
                </button>  
                <span></span>     
@@ -248,6 +254,9 @@ td {
   flex-direction: column;
    align-items: flex-start;
   justify-content: left;
+}
+.query__rerolad-data {
+  width: 35px;
 }
 .query__delete-button {
   width: 35px;

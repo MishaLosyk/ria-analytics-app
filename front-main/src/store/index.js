@@ -13,6 +13,7 @@ export default new Vuex.Store({
       auth:false, 
       tables:null,
       ip: 'http://localhost', //
+      api_key: ''
     },
   mutations: {
     LOGIN: (state, payload) =>{
@@ -23,6 +24,7 @@ export default new Vuex.Store({
       state.role = payload.data.role
       state.auth = payload.data.auth
       state.tables = payload.data.tables
+      state.api_key = payload.data.api_key
     },
 
 

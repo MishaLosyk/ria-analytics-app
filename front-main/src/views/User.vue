@@ -5,6 +5,18 @@
         <div id="ria">RIA</div>
         <div id="analyt">analytics</div>
     </div>
+      <div id="nav">
+        <ul class="user_navigation">
+          <li 
+            class="user-navigation-item"
+            @click="isQueryListVisible = true; isApiVisible = false"
+            >Запити</li>
+          <li 
+          class="user-navigation-item"
+          @click="isQueryListVisible = false; isApiVisible = true"
+          >Апі-доступ</li>
+        </ul>
+      </div>
       <div class="content">
       <p> Привіт, {{$store.state.name}}</p>
       <!-- user_id=   = {{user_id}}   -->
@@ -12,9 +24,13 @@
       <QueryList 
       :query-list="queryArray"
       v-on:get-query-list="getQueryList"
+      v-if="isQueryListVisible"
       ></QueryList>
       <!-- fhdfh -->
       <!-- <QueryResultTable :query-data-object=""> </QueryResultTable> -->
+      <ApiAccessComponent
+      v-if="isApiVisible"
+      />
     
 
 
@@ -33,12 +49,14 @@
 <script>
 import axios from 'axios';
 import QueryList from "@/components/user/QueryList"
+import ApiAccessComponent from "@/components/user/ApiAccessComponent";
 
 export default {
    name:'User',
   //  props: ['user_id'],
     components: {
       QueryList,
+      ApiAccessComponent
     
     },
     data() {
@@ -46,7 +64,9 @@ export default {
         name: "Jack",
         surname: "Smith",
         user_id: 1,
-        queryArray: []
+        queryArray: [],
+        isApiVisible:false,
+        isQueryListVisible: true,
       }
     },
     created () {
@@ -136,5 +156,16 @@ padding-top: 14px;
   text-align: left;
   padding-left:19px;
   font-size: 22px;
+}
+#nav{
+  position: absolute;
+  left: 35px;
+  top: 160px;
+  height: 120px;
+  width: 200px; 
+  background:rgba(0, 47, 68, .1);
+  color: rgb(0, 0, 0);
+  border-radius: 8px;
+  text-align: left;
 }
 </style>
