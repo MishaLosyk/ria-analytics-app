@@ -3,6 +3,7 @@
     <div id="icon"> <div id="ria">RIA</div>
       <div id="analyt">analytics</div></div>
       <MakeRequest @getTable="onGetTable" v-bind:tempnames="tempnames" @changefield ='onChangefield' @unionall='onUnionAll' @union='onUnion' @submit="onSubmit" v-bind:fieldname="fieldname" v-bind:request="request" v-bind:result="result" v-bind:temprequest="temprequest" v-bind:tempfield="tempfield"/>
+            <div id="inst"><a href="https://docs.google.com/presentation/d/1JyAZ5nOcB2WaQVM3pwbNtC7iTDyQfT7xxmHyb_7GrOQ/edit#slide=id.gccc7986fe8_0_47" target="_blank">Інструкція</a></div>
       <RecievedData @saver='onSaver' v-bind:recieved="recieved"/>
       <SavedReq @runSave='onRunSave' />
   </div>
@@ -92,6 +93,7 @@ onSaver(name){
   }
 console.log(a)
 axios.post(this.storageIp+":8081/add_q", a, {headers: {token: this.storageToken}});
+this.$bus.$emit('SaveNewReq', 'Hi')
 
 
 },
@@ -219,6 +221,12 @@ onUnionAll(){
 </script>
 
 <style scoped>
+#inst{
+  float: right;
+  padding-right: 20px;
+}
+
+
 #app {
   text-align: center;
   font-family: 'Montserrat', sans-serif;
