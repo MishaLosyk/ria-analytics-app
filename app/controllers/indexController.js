@@ -38,6 +38,10 @@ async function search (ctx, next) {
 
 }
 
+/**
+ * @example curl -XPOST "http://localhost:8081/login" -d 'header{auth: basic}' -H 'Content-Type: application/json'
+ */
+
 async function login (ctx, next) {
     const auth = loginManager.authDecode(ctx.request.header.authorization);
     const user = await mysqlDb.checkLogin(auth);
@@ -57,6 +61,9 @@ async function login (ctx, next) {
     await next();
 }
 
+/**
+ * @example curl -XPOST "http://localhost:8081/add_q" -d '{}' -H 'Content-Type: application/json'
+ */
 async function addQuery (ctx, next) {
     const userToken = loginManager.decodeToken(ctx.request.header.token);
     const user = ctx.request.body;

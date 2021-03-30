@@ -1,11 +1,11 @@
 <template>
 <div>
 	<div v-if="recieved == null"><div id="result">Зробіть запит</div></div>
-		<div v-if="recieved == 'error'"><div id="result">Немає данних які підхотят під ваш запит</div></div>
+		<div v-if="recieved == 'error'"><div id="result">Відсутні дані</div></div>
 	<div v-if="recieved != null && recieved != 'error'">
 	<div id="result">Результат:<b>{{recieved.data.length}} рядків</b></div>
 				<div id="save">
-		<button id="saveButton" @click="saver" :disabled="savename ==''">Зберігти запит</button>
+		<button id="saveButton" @click="saver" :disabled="savename ==''">Зберегти запит</button>
 		<input type="text" placeholder="Назва" id="saveInput" v-model="savename">
 	</div>
 	<div id ='table'>
