@@ -1,11 +1,21 @@
 <template>
   <div id="app">
+      <link rel="stylesheet" 
+        href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" 
+        integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" 
+        crossorigin="anonymous">
     <div id="nav" v-if="storageAuth">
+      <p        
+        @click="doLogOut"
+        class="greeting__elemen"> 
+        Привіт, {{$store.state.name}} <i class="fas fa-sign-out-alt"></i>
+      </p>
       <router-link style="margin-right:10px" to="/">Конструктор</router-link> 
       <router-link style="margin-right:10px" to="/admin" v-if="storageRole == 'admin'">Адмін панель</router-link>
       <router-link style="margin-right:10px" to="/user">Кабінет користувача</router-link>
       <!-- <router-link style="margin-right:10px" :to="{name: 'user', params: {user_id:1}}">Кабінет користувача</router-link> -->
     </div>
+
     <div id="auth" v-if="!storageAuth">
       <button id="loginButton" @click="author" :disabled="email == ''|| pass == ''">Увійти</button>
       <input id="authinput" type="text" placeholder="Email" v-model="email">
@@ -13,6 +23,7 @@
     </div>
    
     <router-view />
+    
   </div>
 </template>
 
@@ -42,6 +53,11 @@ export default {
     }
   },
   methods:{
+     doLogOut() {
+        this.$store.dispatch('logout');
+        if(!this.$router.currentRoute === '/')
+        this.$router.push('/');
+      },
     async author(){
       let a = {
         email: this.email,
@@ -55,7 +71,7 @@ export default {
       if(responce.data.role == 'admin' && responce.data.auth){
         this.$router.push('admin')
       } else {
-         this.$router.push('/')
+        if(!this.$router.currentRoute === '/')  this.$router.push('/')
       }
      
     }
@@ -126,5 +142,15 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+.greeting__elemen {
+  margin-top:-10px;
+  margin-bottom: 0;
+  color:white;
+  text-align: right;
+}
+.greeting__elemen:hover {
+  cursor: pointer;
+  color:rgb(253, 142, 142)
 }
 </style>

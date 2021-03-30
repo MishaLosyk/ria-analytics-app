@@ -29,7 +29,7 @@
                 <i class="far fa-save"></i>
             </button>
         </div>
-        {{apiKey}}
+
     </div>
 </div>
 
@@ -42,20 +42,24 @@
         name: "ApiAccessComponent",
         data(){
             return {
-                apiKey:'44',
+                apiKey:this.$store.state.api_key,
             }
         },
         methods: {
             async saveApiKey() {
-                console.log("api key from store")
-                console.log(this.storageApiKey)
-            // const response = await axios.post(this.storageIp+":8081/api",
-            //     {
-            //     api_key:  this.apiKey                
-            //     },
-            //     {headers: {token: this.storageToken}}); 
-            //     console.log("response api send")
-            //     console.log(response.data)
+                // console.log(this.storageApiKey)
+            const response = await axios.post(this.storageIp+":8081/api",
+                {
+                api_key:  this.apiKey                
+                },
+                {headers: {token: this.storageToken}}); 
+
+                if(response.data === "OK") {
+                    
+                    alert("збережено")
+                } else {
+                    alertt("Помилка")
+                }
             }
         },
         computed: {
@@ -80,7 +84,8 @@
 
 <style lang="css" scoped>
     .main-containiner {
-        margin-top: 150px;
+        margin-top: 0;
+        padding-top: 160px;
         color:rgba(0, 47, 68, 1);
     }
     .api_controls {

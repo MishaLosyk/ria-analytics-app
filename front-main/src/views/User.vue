@@ -9,25 +9,23 @@
         <ul class="user_navigation">
           <li 
             class="user-navigation-item"
+            v-bind:class="{ menuItemSelected: isQueryListVisible }"
             @click="isQueryListVisible = true; isApiVisible = false"
             >Запити</li>
           <li 
           class="user-navigation-item"
+          :class="{ menuItemSelected: isApiVisible }"
           @click="isQueryListVisible = false; isApiVisible = true"
           >Апі-доступ</li>
         </ul>
       </div>
       <div class="content">
-      <p> Привіт, {{$store.state.name}}</p>
-      <!-- user_id=   = {{user_id}}   -->
-      <!-- $route.params.user_id    -якщо в роутах props: false -->
+
       <QueryList 
       :query-list="queryArray"
       v-on:get-query-list="getQueryList"
       v-if="isQueryListVisible"
       ></QueryList>
-      <!-- fhdfh -->
-      <!-- <QueryResultTable :query-data-object=""> </QueryResultTable> -->
       <ApiAccessComponent
       v-if="isApiVisible"
       />
@@ -87,21 +85,15 @@ export default {
       },
     },
     methods: {
-      aaa (a) {
-        console.log("in upper comp" ,a)
-      },
+     
+     
        async getQueryList () {
-         console.log("in get query list")
-        console.log(this.$store.state.name + ' ' + this.$store.state.surname)
         const response = await axios.post(this.storageIp+":8081/query_list", {user_id: this.storageUser_id}, {headers: {token: this.storageToken}});   //! порт  і шлях до сервера
             if(response.statusText === "OK") {
               this.queryArray = response.data;
             }
-          console.log(response)
-      // const response =  await axios.get(`http://localhost:8081/`)///,{user_id: this.user_id}) 
-      // .then(data=> console.log(data))
-      // this.queryArray = response.data
-      //   console.log(this.queryArray)
+
+
        }
     },
     watch: {
@@ -168,4 +160,22 @@ padding-top: 14px;
   border-radius: 8px;
   text-align: left;
 }
+.user_navigation {
+  list-style: none;
+}
+.menuItemSelected {
+  color:rgba(0, 47, 68, 1);
+  font-weight: bold;
+  text-decoration: underline;
+}
+.user-navigation-item:hover {
+  cursor: pointer;
+  font-weight: bold;
+  color:rgba(0, 47, 68, 1);
+  text-decoration: underline;
+  
+  /* box-shadow: 0 0 10px 0 #d8d9da inset, 0 0 10px 4px rgba(0, 47, 68, 1); */
+
+}
+
 </style>

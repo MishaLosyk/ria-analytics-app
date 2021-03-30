@@ -26,12 +26,19 @@ export default new Vuex.Store({
       state.tables = payload.data.tables
       state.api_key = payload.data.api_key
     },
+    logout (state){
+      state.auth = false;
+    }
 
 
     // SET_NAME: (state, payload) => {
     //   state.name = payload;
     // },
   },
-  actions: {},
+  actions: {
+    logout(context){
+      context.commit('logout');
+    }
+  },
   modules: {},
 });
