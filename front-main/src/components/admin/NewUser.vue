@@ -2,10 +2,10 @@
     <div class="userBlock">
         <div>Додати нового користувача</div>
         <div>
-            <input class="input1" type="text" placeholder="Логін" v-model="login"> 
-            <input class="inputU" type="text" placeholder="Пароль" v-model="pass">
-            <input class="inputU" type="text" placeholder="Ім'я" v-model="name">
-            <input class="inputU" type="text" placeholder="Прізвище" v-model="surname">
+            <input class="input1" type="text" placeholder="Логін" v-model="login" maxlength='35'> 
+            <input class="inputU" type="text" placeholder="Пароль" v-model="pass" maxlength='35'>
+            <input class="inputU" type="text" placeholder="Ім'я" v-model="name" maxlength='35'>
+            <input class="inputU" type="text" placeholder="Прізвище" v-model="surname" maxlength='35'>
                         <select id="selectRole" v-model="role">
                 <option selected disabled hidden value="">Роль</option>
                 <option value="admin">Admin</option>
